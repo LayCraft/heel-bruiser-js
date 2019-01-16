@@ -19,23 +19,37 @@ module.exports.buildBoard = (boardData) => {
         board = writePoint(board, food.x, food.y, "f")
     });
     
-    let enemyHeads = []
     //write all snakes to grid
+    enemyHeads = []
     boardData.board.snakes.forEach(snake=>{
         if(snake.id != boardData.you.id){
             //draw enemy snakes
-            snake.body.forEach(bod=>{
+            snake.body.forEach((bod, i)=>{
+                if(i===0){
+                    //add heads to heads array
+                    enemyHeads.push(bod)
+                }
+                //draw body like normal
                 board = writePoint(board, bod.x, bod.y, "b")
+                
             })
         } else {
             //draw your snake
-            //draw enemy snakes
-            snake.body.forEach(bod=>{
-                board = writePoint(board, bod.x, bod.y, "B")
+            snake.body.forEach((bod, i)=>{
+                if(i===0){
+                    //draw head
+                    board = writePoint(board, bod.x, bod.y, "H")
+                }else if (i===snake.body.length-1){
+                    //draw tail
+                    board = writePoint(board, bod.x, bod.y, "t")
+                }else{
+                    //draw body
+                    board = writePoint(board, bod.x, bod.y, "b")
+                }
             })
         }
     })
-
+    console.log(enemyHeads)
     console.log(board)
 }
 
