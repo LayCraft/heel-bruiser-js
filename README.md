@@ -1,4 +1,5 @@
-# starter-snake-node(js)
+# Heel-Bruiser-js
+A snake for BattleSnake 2019. This snake may be able to bruise a heel but ultimately the head will be crushed.
 
 A simple [Battlesnake AI](https://battlesnake.io) written in Javascript for NodeJS.
 
