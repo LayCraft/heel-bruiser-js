@@ -26,6 +26,9 @@ module.exports.buildBoard = (boardData) => {
             //draw enemy snakes
             snake.body.forEach((bod, i)=>{
                 if(i===0){
+                    //save the length with the head so we know if it is orthoganal threat
+                    let head = bod
+                    head["length"] = snake.body.length
                     //add heads to heads array
                     enemyHeads.push(bod)
                 }
@@ -49,6 +52,8 @@ module.exports.buildBoard = (boardData) => {
             })
         }
     })
+
+    //TODO: draw enemy head
     console.log(enemyHeads)
     console.log(board)
 }
