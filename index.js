@@ -1,6 +1,9 @@
 const bodyParser = require('body-parser')
 const express = require('express')
 const logger = require('morgan')
+
+const board = require('./app/board') //The board related module
+
 const app = express()
 const {
   fallbackHandler,
@@ -24,19 +27,21 @@ app.use(poweredByHandler)
 // Handle POST request to '/start'
 app.post('/start', (request, response) => {
   // NOTE: Do something here to start the game
-
   // Response data
   const data = {
-    color: '#DFFF00',
+    color: '#FED348',
   }
-
   return response.json(data)
 })
 
 // Handle POST request to '/move'
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
+  
+  //construct a board
+  board.buildBoard(request.body)
 
+  // console.log(request.body)
   // Response data
   const data = {
     move: 'up', // one of: ['up','down','left','right']
