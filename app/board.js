@@ -1,7 +1,14 @@
 /*
 f -food
-b -body
+
 H -my head
+B -my body
+T -my tail
+
+h -other snake head
+b -body
+t -other snake tail
+
 d -danger locations
 */
 module.exports.buildBoard = (boardData) => {
@@ -21,7 +28,7 @@ module.exports.buildBoard = (boardData) => {
     
     //write all snakes to grid
     enemyHeads = []
-    dangerousTails = []
+    enemyTails = []
     boardData.board.snakes.forEach(snake=>{
         if(snake.id != boardData.you.id){
             //draw enemy snakes
@@ -30,16 +37,19 @@ module.exports.buildBoard = (boardData) => {
                     //save the length with the head so we know if it is orthoganal threat
                     let head = bod
                     head["length"] = snake.body.length
+                    //write the head to the board
+                    board = writePoint(board, bod.x, bod.y, "h")
                     //add heads to heads array
                     enemyHeads.push(bod)
                 } else if (i===snake.body.length-1){
-                    //tail
+                    //draw tail
+                    board = writePoint(board, bod.x, bod.y, "t")
+                    //add tails to enemy tails array. Later we can decide if they re
+                    enemyTails.push(bod)
                 } else {
-
-                }
-                //draw body like normal
-                board = writePoint(board, bod.x, bod.y, "b")
-                
+                    //draw body
+                    board = writePoint(board, bod.x, bod.y, "b")
+                } 
             })
         } else {
             //draw your snake
@@ -49,10 +59,10 @@ module.exports.buildBoard = (boardData) => {
                     board = writePoint(board, bod.x, bod.y, "H")
                 } else if (i===snake.body.length-1){
                     //draw tail
-                    board = writePoint(board, bod.x, bod.y, "t")
+                    board = writePoint(board, bod.x, bod.y, "T")
                 } else{
                     //draw body
-                    board = writePoint(board, bod.x, bod.y, "b")
+                    board = writePoint(board, bod.x, bod.y, "B")
                 }
             })
         }
@@ -86,7 +96,7 @@ markOrthoganalDanger= (board, x, y) => {
         })
     //every point remaining in orth should be marked as a threat.
     orth.forEach(point=>{
-        writePoint(board, point[0], point[1], 't')
+        writePoint(board, point[0], point[1], 'd')
     })
     return board
 }
