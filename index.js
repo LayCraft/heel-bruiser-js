@@ -3,6 +3,7 @@ const express = require('express')
 const logger = require('morgan')
 
 const boardBuild = require('./app/board') //The board related module
+const priorityBuild = require('./app/priority') //Generates a priority string
 
 const app = express()
 const {
@@ -41,6 +42,7 @@ app.post('/move', (request, response) => {
   //construct a board
   
   const board = boardBuild.buildBoard(request.body)
+  const priority = priorityBuild.buildPriority(request.body, board)
   console.log(board)
 
   // console.log(request.body)
