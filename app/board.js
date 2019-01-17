@@ -74,8 +74,7 @@ module.exports.buildBoard = (boardData) => {
             board = markOrthoganalDanger(board, head.x, head.y)
         }
     })
-
-    console.log(board)
+    // todo: check enemy tail positions for multiple body stacked up or potential threat because they are about to eat
     return board
 }
 

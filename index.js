@@ -2,7 +2,7 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const logger = require('morgan')
 
-const board = require('./app/board') //The board related module
+const boardBuild = require('./app/board') //The board related module
 
 const app = express()
 const {
@@ -39,7 +39,9 @@ app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
   
   //construct a board
-  board.buildBoard(request.body)
+  
+  const board = boardBuild.buildBoard(request.body)
+  console.log(board)
 
   // console.log(request.body)
   // Response data
