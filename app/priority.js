@@ -41,8 +41,10 @@ module.exports.buildPriority = (request, board) =>{
     */
     return strat
 }
-
-
+atLocation= (board, poi) => {
+    //what is the thing at this x and y?
+    return board[poi.y][poi.x].content
+}
 
 getOrhoganalPoints= (board, poi) => {
     // make predictable list with invalid elements
@@ -63,8 +65,16 @@ getOrhoganalPoints= (board, poi) => {
 //----------------------------
 dontCrash = (board, head) => {
     // the basics of this is "Do not leave the map."
-    let choices = getOrhoganalPoints(board, head).map(d=>{
-        return d.direction
-    })
-    return {directions:choices}
+    let choices = getOrhoganalPoints(board, head)
+        .filter(poi=>{
+            //if the poi returns B,b,h it is a no go zone
+            let sp = atLocation(board, poi)
+            if(sp.includes('b')||sp.includes('h')||sp.includes('B')){ 
+                return false 
+            } else return true
+        }).map(poi=>{
+            //clean up to just return direction part
+            return poi.direction
+        })
+    return {strategy:'dontcrash', directions:choices}
 }
