@@ -45,8 +45,8 @@ app.post('/move', (request, response) => {
   
   const board = boardBuild.buildBoard(request.body)
   const priorities = priorityBuild.buildPriority(request.body, board)
-  console.log(priorities)
-  printer.printBoard(board) //printing pads the content of each cell. :-( remove before deploy
+  // console.log(priorities)
+  // printer.printBoard(board) //printing pads the content of each cell. :-( remove before deploy
 
   // console.log(request.body)
   // Response data
