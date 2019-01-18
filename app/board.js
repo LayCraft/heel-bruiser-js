@@ -77,7 +77,7 @@ module.exports.buildBoard = (boardData) => {
 
 markOrthoganalDanger= (board, poi) => {
     //make a list of points within boundaries and also not "body points"
-    let orth = getOrhoganalPoints(board, poi)
+    let orth = getOrthoganalPoints(board, poi)
         .filter(p=>{
             //remove body points marked with b from this list
             if(atLocation(board, p) === 'b'){
@@ -92,7 +92,7 @@ markOrthoganalDanger= (board, poi) => {
     return board
 }
 
-getOrhoganalPoints= (board, poi) => {
+getOrthoganalPoints= (board, poi) => {
     // make predictable list with invalid elements
     return [
         {x:poi.x+1, y:poi.y},

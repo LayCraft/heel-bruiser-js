@@ -17,8 +17,11 @@ module.exports.buildPriority = (request, board) =>{
     // const food = request.board.food //array of objects with x: and y: keys
     // const health = request.you.health
     const head = request.you.body[0]
+    const directions = ['left','right','up','down']
+    strat.push(dontCrash(directions, board, head))
+    //don't eath the tail of a snake with head beside food
 
-    strat.push(dontCrash(board, head))
+
     // console.log(strat)
     //self-actualization - Can I kill right now?
     //esteem - Status needs. be the big snake and eat as much as possible
@@ -46,7 +49,7 @@ atLocation= (board, poi) => {
     return board[poi.y][poi.x].content
 }
 
-getOrhoganalPoints= (board, poi) => {
+getOrthoganalPoints= (board, poi) => {
     // make predictable list with invalid elements
     return [
         //direction is away from the supplied point
@@ -63,9 +66,10 @@ getOrhoganalPoints= (board, poi) => {
 }
 
 //----------------------------
-dontCrash = (board, head) => {
+dontCrash = (directions, board, head) => {
     // the basics of this is "Do not leave the map."
-    let choices = getOrhoganalPoints(board, head)
+    //this should be modified to "steer in directions with the most area"
+    let choices = getOrthoganalPoints(board, head)
         .filter(poi=>{
             //if the poi returns B,b,h it is a no go zone
             let sp = atLocation(board, poi)
@@ -76,5 +80,5 @@ dontCrash = (board, head) => {
             //clean up to just return direction part
             return poi.direction
         })
-    return {strategy:'dontcrash', directions:choices}
+    return {strategy:'dontCrash', directions:choices}
 }
