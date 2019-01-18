@@ -45,13 +45,13 @@ app.post('/move', (request, response) => {
   
   const board = boardBuild.buildBoard(request.body)
   const priorities = priorityBuild.buildPriority(request.body, board)
-  // console.log(priorities)
+  console.log(priorities[0].directions)
+  const move = priorityBuild.randomDirection(priorities[0].directions)
   // printer.printBoard(board) //printing pads the content of each cell. :-( remove before deploy
 
-  // console.log(request.body)
   // Response data
   const data = {
-    move: 'up', // one of: ['up','down','left','right']
+    move: move, // one of: ['up','down','left','right']
   }
 
   return response.json(data)

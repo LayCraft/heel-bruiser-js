@@ -1,3 +1,8 @@
+exports.randomDirection = (directions) => {
+    // directions looks like this: ['l','r','u','d']
+    return directions[Math.floor(Math.random()*directions.length)]
+}
+
 //this sets a snake priority and determines what the snake should do
 module.exports.buildPriority = (request, board) =>{
 
@@ -11,9 +16,9 @@ module.exports.buildPriority = (request, board) =>{
     // const boardWidth = request.board.width
     // const food = request.board.food //array of objects with x: and y: keys
     // const health = request.you.health
-    // const head = request.you.body[0]
+    const head = request.you.body[0]
 
-    // strat.push(dontCrash(board, head))
+    strat.push(dontCrash(board, head))
     // console.log(strat)
     //self-actualization - Can I kill right now?
     //esteem - Status needs. be the big snake and eat as much as possible
@@ -34,16 +39,32 @@ module.exports.buildPriority = (request, board) =>{
         
         need: true/false, <-override all other strategies
     */
-
     return strat
 }
 
-randomDirection = (directions) => {
-    // directions looks like this: ['l','r','u','d']
-    return directions[Math.floor(Math.random()*directions.length)]
+
+
+getOrhoganalPoints= (board, poi) => {
+    // make predictable list with invalid elements
+    return [
+        //direction is away from the supplied point
+        {x:poi.x+1, y:poi.y, direction:'right'},
+        {x:poi.x-1, y:poi.y, direction:'left'},
+        {x:poi.x, y:poi.y+1, direction:'down'},
+        {x:poi.x, y:poi.y-1, direction:'up'}
+    ].filter(p=>{
+        //remove all of the invalid elements
+        if(p.x<0 || p.y<0 || p.y===board.length || p.x===board[0].length){
+            return false
+        } else return true
+    })
 }
 
 //----------------------------
 dontCrash = (board, head) => {
     // the basics of this is "Do not leave the map."
+    let choices = getOrhoganalPoints(board, head).map(d=>{
+        return d.direction
+    })
+    return {directions:choices}
 }
