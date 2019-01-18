@@ -3,6 +3,8 @@ const express = require('express')
 const logger = require('morgan')
 
 const boardBuild = require('./app/board') //The board related module
+const printer = require('./app/printer') //The printers
+
 const priorityBuild = require('./app/priority') //Generates a priority string
 
 const app = express()
@@ -42,8 +44,9 @@ app.post('/move', (request, response) => {
   //construct a board
   
   const board = boardBuild.buildBoard(request.body)
-  const priority = priorityBuild.buildPriority(request.body, board)
-  console.log(board)
+  const priorities = priorityBuild.buildPriority(request.body, board)
+  console.log(priorities)
+  printer.printBoard(board) //printing pads the content of each cell. :-( remove before deploy
 
   // console.log(request.body)
   // Response data
