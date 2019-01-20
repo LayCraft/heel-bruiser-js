@@ -68,12 +68,18 @@ module.exports.buildBoard = (boardData) => {
     enemyHeadsTailLength.forEach(headTailLength=>{
         if(headTailLength[2] >= boardData.you.body.length){
             //snake is your equal or longer.
-            console.log("Danger Snake")
             board = markOrthoganalDanger(board, headTailLength[0])
         }
-        //if head beside food
-        // let headBesideFood = 
-        //if head is beside food tail is a danger zone
+
+        //how many food are by the mouth of the snake?
+        getOrthoganalPoints(board, headTailLength[0]).forEach(mouthPoi=>{                    
+
+            //if there are any foods in the mouth zone then mark the tail with a danger d
+           if(atLocation(board, mouthPoi).includes('f')){
+               board = writePoint(board, headTailLength[1], 'd')
+           }
+        })
+
     })
     return board
 }
@@ -119,8 +125,6 @@ writePoint= (board, poi, letter) => {
         // body sections and heads are definitely not traversable
         board[poi.y][poi.x].traversable = false
     } else if (board[poi.y][poi.x].content.includes('t') && board[poi.y][poi.x].content.includes('b')){
-        //TODO: one more condition is when the head is near food a solo tail becomes blocked
-
         //if the tail has an extra body segment traversability is false
         board[poi.y][poi.x].traversable = false
     } else {

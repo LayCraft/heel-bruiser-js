@@ -47,7 +47,7 @@ app.post('/move', (request, response) => {
   // const priorities = priorityBuild.buildPriority(request.body, board)
   // console.log(priorities[0].directions)
   // const move = priorityBuild.randomDirection(['left','right','up','down'])
-  // printer.printBoard(board) //printing pads the content of each cell. :-( remove before deploy
+  printer.printBoard(board) //printing pads the content of each cell. :-( remove before deploy
 
   // Response data
   const data = {
