@@ -81,6 +81,8 @@ module.exports.buildBoard = (boardData) => {
         })
 
     })
+
+    // the tail of my snake should be considered dangerous because food could spawn there
     return board
 }
 

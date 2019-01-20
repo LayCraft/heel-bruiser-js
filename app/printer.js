@@ -4,8 +4,11 @@ exports.printBoard = (board) => {
     b.forEach((y)=>{
         let yrow = '|'
         y.forEach((x)=>{
-            while (x.content.length<5){
-                x.content = x.content + ' '
+            // console.log(x)
+            let f = '~'
+            if (x.traversable) {f = ' '}
+            while (x.content.length<7){
+                x.content = x.content + f
             }
             yrow = yrow + x.content + '|'
         })
