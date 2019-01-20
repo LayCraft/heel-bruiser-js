@@ -18,22 +18,24 @@ module.exports.buildPriority = (request, board) =>{
     // const health = request.you.health
     const head = request.you.body[0]
     const directions = ['left','right','up','down']
-    strat.push(dontCrash(directions, board, head))
-    //don't eath the tail of a snake with head beside food
+    //directions is the remaining available start directions
+    strat.push(dontCrash(directions, board, head))//don't collide with snake bodies and heads
+    //don't move into a tail space if the head is by food
+    strat.push(dontRiskIt(directions, board, head)) //don't move into an unnecesary risk spot if an equal alternate is avail (Don't eat tail of other snake if head near food. choose a safe spot over a risky spot if possible )
+
+    //basically make a priority system that gives first choice moves for tie breakers 
+    //[{'right','left'},{'up'}]
+
+    //when assessing the doAttack sort of thing, check for rewards in order. Each do strategy should be hand assigned a priority to determine which breaks ties.
+
+    //if the furthest point in a direction is a enemy head and there is no threat and there are less food pellets in the space than the difference in your lengths then steer into the channel for the kill
+
+    // avoid crashing and confined spaces
+    // build a list of directions from best to worst risk
+    // assign a value to each direction representing cumulative "do" score.
+    // risk/reward needs an adjustment point
 
 
-    // console.log(strat)
-    //self-actualization - Can I kill right now?
-    //esteem - Status needs. be the big snake and eat as much as possible
-    //love/belonging - come in for a kiss on other shorter snakes if possible. Get your head near theirs.
-    //safety - Avoid threat spaces
-    //physiological - Get food and stay alive
-    //assess food need
-    //assess food convenience
-    //assess other snake food need. Can I get a hungrier snake's food first?
-    //can I trap another snake in a small space?
-    //
-    // this should return a list of strategy objects that we can filter/reduce later
     /*
         strategy:"foodHoarding", 
         target: {},
@@ -65,10 +67,28 @@ getOrthoganalPoints= (board, poi) => {
     })
 }
 
+inventoryArea= (board, poi) => {
+    //convert into simpler object
+    //this takes the point sample on the board and returns all traversable points and a count of threats, and food.
+    let checked = []
+    let unchecked =[{x:poi.x, y:poi.y}]
+    
+    let traversable = [] // the final collection of points that can be navigated
+    //keep looping until all unchecked become checked
+    while(unchecked.length>0){
+        let p = unchecked.pop()
+        //only check unchecked locations
+        if(!checked.includes({x:p.x, y:p.x})){
+        }
+    }
+}
+
 //----------------------------
 dontCrash = (directions, board, head) => {
     // the basics of this is "Do not leave the map."
     //this should be modified to "steer in directions with the most area"
+
+
     let choices = getOrthoganalPoints(board, head)
         .filter(poi=>{
             //if the poi returns B,b,h it is a no go zone
