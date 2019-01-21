@@ -86,7 +86,7 @@ module.exports.buildBoard = (boardData) => {
     return board
 }
 
-markOrthoganalDanger= (board, poi) => {
+const markOrthoganalDanger= (board, poi) => {
     //make a list of points within boundaries and also not "body points"
     let orth = getOrthoganalPoints(board, poi)
         .filter(p=>{
@@ -103,7 +103,7 @@ markOrthoganalDanger= (board, poi) => {
     return board
 }
 
-getOrthoganalPoints= (board, poi) => {
+const getOrthoganalPoints= (board, poi) => {
     // make predictable list with invalid elements
     return [
         {x:poi.x+1, y:poi.y},
@@ -118,7 +118,7 @@ getOrthoganalPoints= (board, poi) => {
     })
 }
 
-writePoint= (board, poi, letter) => {
+const writePoint= (board, poi, letter) => {
     //concatenate the new letter onto the string
     board[poi.y][poi.x].content = board[poi.y][poi.x].content + letter
     if( board[poi.y][poi.x].content.includes('B') || 
@@ -141,7 +141,7 @@ atLocation= (board, poi) => {
     return board[poi.y][poi.x]
 }
 
-makeEmptyGrid= (width, height) => {
+const makeEmptyGrid= (width, height) => {
    //construct a 2D array to fill with stuff
    let board = []
    for(let y=0; y<height ;y++){
