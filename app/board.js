@@ -17,6 +17,7 @@ module.exports.buildBoard = (boardData) => {
     //poi means point of interest. It is an object with minumum an x and y key
 
     board = makeEmptyGrid(boardData.board.width, boardData.board.height)
+
     //write all food to grid
     boardData.board.food.forEach(food => {
         board = writePoint(board, food, "f")
@@ -81,7 +82,6 @@ module.exports.buildBoard = (boardData) => {
         })
 
     })
-
     // the tail of my snake should be considered dangerous because food could spawn there
     return board
 }
@@ -90,8 +90,9 @@ markOrthoganalDanger= (board, poi) => {
     //make a list of points within boundaries and also not "body points"
     let orth = getOrthoganalPoints(board, poi)
         .filter(p=>{
+            console.log(atLocation(board, p))
             //remove body points marked with b from this list
-            if(atLocation(board, p) === 'b'){
+            if(atLocation(board, p).includes('b')){
                 return false
             } else return true
         })

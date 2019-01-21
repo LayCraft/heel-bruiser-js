@@ -42,8 +42,7 @@ app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
   
   //construct a board
-  
-  const board = boardBuild.buildBoard(request.body)
+  let board = boardBuild.buildBoard(request.body)
   // const priorities = priorityBuild.buildPriority(request.body, board)
   // console.log(priorities[0].directions)
   // const move = priorityBuild.randomDirection(['left','right','up','down'])
