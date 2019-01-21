@@ -77,7 +77,7 @@ module.exports.buildBoard = (boardData) => {
 
             //if there are any foods in the mouth zone then mark the tail with a danger d
            if(atLocation(board, mouthPoi).includes('f')){
-               board = writePoint(board, headTailLength[1], 'd')
+               board = writePoint(board, headTailLength[1], '!')
            }
         })
 
@@ -98,7 +98,7 @@ markOrthoganalDanger= (board, poi) => {
 
     //every point remaining in orth should be marked as a threat.
     orth.forEach(p=>{
-        board = writePoint(board, p, 'd')
+        board = writePoint(board, p, '!')
     })
     return board
 }
@@ -130,10 +130,9 @@ writePoint= (board, poi, letter) => {
         //if the tail has an extra body segment traversability is false
         board[poi.y][poi.x].traversable = false
     } else {
-        //food and lone tails
+        //food and lone tails are traversable
         board[poi.y][poi.x].traversable = true
     }
-
     return board
 }
 
