@@ -136,9 +136,9 @@ const writePoint= (board, poi, letter) => {
     return board
 }
 
-atLocation= (board, poi) => {
+const atLocation= (board, poi) => {
     //what is the thing at this x and y?
-    return board[poi.y][poi.x]
+    return board[poi.y][poi.x].content
 }
 
 const makeEmptyGrid= (width, height) => {

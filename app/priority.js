@@ -48,6 +48,7 @@ module.exports.buildPriority = (request, board) =>{
 }
 atLocation= (board, poi) => {
     //what is the thing at this x and y?
+    console.log("Using the priority version of atLocation()")
     return board[poi.y][poi.x].content
 }
 

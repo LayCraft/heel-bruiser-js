@@ -30,10 +30,10 @@ module.exports.inventoryArea = (board, poi) => {
     }
 }
 
-module.exports.atLocation= (board, poi) => {
-    //what is the thing at this x and y?
-    return board[poi.y][poi.x].content
-}
+// module.exports.atLocation = (board, poi) => {
+//     //what is the thing at this x and y?
+//     return board[poi.y][poi.x].content
+// }
 
 module.exports.getOrthoganalPoints= (board, poi) => {
     // make predictable list with invalid elements
