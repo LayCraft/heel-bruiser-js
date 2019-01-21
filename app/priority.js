@@ -46,43 +46,6 @@ module.exports.buildPriority = (request, board) =>{
     */
     return strat
 }
-atLocation= (board, poi) => {
-    //what is the thing at this x and y?
-    console.log("Using the priority version of atLocation()")
-    return board[poi.y][poi.x].content
-}
-
-getOrthoganalPoints= (board, poi) => {
-    // make predictable list with invalid elements
-    return [
-        //direction is away from the supplied point
-        {x:poi.x+1, y:poi.y, direction:'right'},
-        {x:poi.x-1, y:poi.y, direction:'left'},
-        {x:poi.x, y:poi.y+1, direction:'down'},
-        {x:poi.x, y:poi.y-1, direction:'up'}
-    ].filter(p=>{
-        //remove all of the invalid elements
-        if(p.x<0 || p.y<0 || p.y===board.length || p.x===board[0].length){
-            return false
-        } else return true
-    })
-}
-
-inventoryArea= (board, poi) => {
-    //convert into simpler object
-    //this takes the point sample on the board and returns all traversable points and a count of threats, and food.
-    let checked = []
-    let unchecked =[{x:poi.x, y:poi.y}]
-    
-    let traversable = [] // the final collection of points that can be navigated
-    //keep looping until all unchecked become checked
-    while(unchecked.length>0){
-        let p = unchecked.pop()
-        //only check unchecked locations
-        if(!checked.includes({x:p.x, y:p.x})){
-        }
-    }
-}
 
 //----------------------------
 dontCrash = (directions, board, head) => {
