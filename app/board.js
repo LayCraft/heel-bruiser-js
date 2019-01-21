@@ -90,7 +90,6 @@ markOrthoganalDanger= (board, poi) => {
     //make a list of points within boundaries and also not "body points"
     let orth = getOrthoganalPoints(board, poi)
         .filter(p=>{
-            console.log(atLocation(board, p))
             //remove body points marked with b from this list
             if(atLocation(board, p).includes('b')){
                 return false
