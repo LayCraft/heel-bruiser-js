@@ -21,6 +21,7 @@ module.exports.getOrthoganalPoints= (board, poi) => {
         } else return true
     })
 }
+
 module.exports.inventoryArea = (board, poi) => {
     //flood fill traversable area and return the points and their distance for diagnostics
     //return [{x:1, y:2, distance: 5, content: 'fd'}]
@@ -28,7 +29,7 @@ module.exports.inventoryArea = (board, poi) => {
 
     //this takes the point sample on the board and returns all traversable points and a count of threats, and food.
     let checked = []
-    let unchecked ={[poi.x, poi.y]:{x:poi.x, y:poi.y}}
+    // let unchecked ={[poi.x, poi.y]:{x:poi.x, y:poi.y} }
     
     let traversable = [] // the final collection of points that can be navigated
     //keep looping until all unchecked become checked
