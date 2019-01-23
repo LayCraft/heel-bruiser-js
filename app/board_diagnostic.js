@@ -1,6 +1,6 @@
 module.exports.atLocation = (board, poi) => {
     //what is the thing at this x and y?
-    return board[poi.y][poi.x].content
+    return board[poi.y][poi.x]
 }
 module.exports.bestRouteBetweenPoints = () => {
     //the route that will put you in the best survival area
@@ -27,18 +27,34 @@ module.exports.inventoryArea = (board, poi) => {
     //flood fill traversable area and return the points and their distance for diagnostics
 
     // //this takes the point sample on the board and returns all traversable points and a count of threats, and food.
-    // let checked = []
-    // // let unchecked =[[poi.x, poi.y]]
-    // let traversable = [] // the final collection of points that can be navigated
-    // let oneTest = unchecked[0];
-    // if (oneTest===unchecked[0]) console.log('!!!!!!!!!!!!!!!!!!!!!!!!')
-    // //keep looping until all unchecked become checked
-    // while(unchecked.length>0){
-    //     let p = unchecked.pop()
-    //     //only check unchecked locations
-    //     if(!checked.includes({x:p.x, y:p.x})){
-    //     }
-    // }
+    let checked = []
+    let unchecked =[{x:poi.x, y:poi.y}]
+    let traversable = [] // the final collection of points that can be navigated
+    let heads = 0
+    let tails = 0
+    let food = 0
+    let threats = 0
+
+    //keep looping until all unchecked become checked
+    while(unchecked.length>0){
+        let p = unchecked.pop() //only gives x and y
+        //only check unchecked locations
+        if(!checked.includes(p)){
+            //collect all orth points from the examined one.
+            console.log("Didn't include")
+            
+            
+            // console.log(getOrthoganalPoints(board, p))
+    //             .forEach(point => {
+    //                 //save traversible points
+    //                 if (point.traversible) traversible.push(point)
+    //                 console.log("POINT!" + point)
+    //             });
+        } else {
+            console.log("Space was already checked")
+        }
+    }
+
     poi['inventoryArea'] = {
         traversible:0,
         threats:0,
