@@ -2,11 +2,22 @@ const diagnostic = require('./board_diagnostic')
 
 //this sets a snake priority and determines what the snake should do
 module.exports.buildPriority = (request, board) =>{
+    let spaz = diagnostic.getOrthoganalPoints(board, request.body.you.body[0])
+        .filter(poi=>{
+            //remove all body points
+            let content = diagnostic.atLocation(board, poi).toLowerCase()
+            if(content.includes('B')||content.includes('b')){
+                return false
+            } else return true
+        }).map(poi=>{
+            return diagnostic.inventoryArea(board, poi)
+        })
+    console.log(spaz)
+
 
     //the list of strategies. Pushed into the list in order of priority
+    
     // var strat = []
-
-
 
     //the basis of survival. Don't crash.
     // const boardHeight = request.board.height

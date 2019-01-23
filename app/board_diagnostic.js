@@ -23,22 +23,30 @@ module.exports.getOrthoganalPoints= (board, poi) => {
 }
 
 module.exports.inventoryArea = (board, poi) => {
-    //flood fill traversable area and return the points and their distance for diagnostics
-    //return [{x:1, y:2, distance: 5, content: 'fd'}]
-    //distance requires routebetween() points
 
-    //this takes the point sample on the board and returns all traversable points and a count of threats, and food.
-    let checked = []
-    // let unchecked ={[poi.x, poi.y]:{x:poi.x, y:poi.y} }
-    
-    let traversable = [] // the final collection of points that can be navigated
-    //keep looping until all unchecked become checked
-    while(unchecked.length>0){
-        let p = unchecked.pop()
-        //only check unchecked locations
-        if(!checked.includes({x:p.x, y:p.x})){
-        }
+    //flood fill traversable area and return the points and their distance for diagnostics
+
+    // //this takes the point sample on the board and returns all traversable points and a count of threats, and food.
+    // let checked = []
+    // // let unchecked =[[poi.x, poi.y]]
+    // let traversable = [] // the final collection of points that can be navigated
+    // let oneTest = unchecked[0];
+    // if (oneTest===unchecked[0]) console.log('!!!!!!!!!!!!!!!!!!!!!!!!')
+    // //keep looping until all unchecked become checked
+    // while(unchecked.length>0){
+    //     let p = unchecked.pop()
+    //     //only check unchecked locations
+    //     if(!checked.includes({x:p.x, y:p.x})){
+    //     }
+    // }
+    poi['inventoryArea'] = {
+        traversible:0,
+        threats:0,
+        food:0,
+        heads:0,
+        tails:0
     }
+    return poi
 }
 exports.randomDirection = (directions) => {
     // directions looks like this: ['left','right','up','down']

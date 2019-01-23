@@ -67,6 +67,7 @@ module.exports.buildBoard = (boardData) => {
 
     //check for danger zones
     enemyHeadsTailLength.forEach(headTailLength=>{
+        //if length is greater or equal the head is a threat
         if(headTailLength[2] >= boardData.you.body.length){
             //snake is your equal or longer.
             board = markOrthoganalDanger(board, headTailLength[0])
@@ -87,15 +88,18 @@ module.exports.buildBoard = (boardData) => {
 }
 
 const markOrthoganalDanger= (board, poi) => {
+    //the head of a longer snake is always threatening.
+    board=writePoint(board, poi, '!')
     //make a list of points within boundaries and also not "body points"
     let orth = getOrthoganalPoints(board, poi)
         .filter(p=>{
-            //remove body points marked with b from this list
-            if(atLocation(board, p).includes('b')){
+            //body points don't move until they become a tail
+            //so ignore threat placement on b spaces
+            let loc = atLocation(board, p)
+            if(loc.includes('b')){
                 return false
             } else return true
         })
-
     //every point remaining in orth should be marked as a threat.
     orth.forEach(p=>{
         board = writePoint(board, p, '!')
