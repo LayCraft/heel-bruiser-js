@@ -4,7 +4,7 @@ const logger = require('morgan')
 
 const boardBuild = require('./app/board') //The board related module
 const diagnostic = require('./app/board_diagnostic') //the route finding stuff
-const printer = require('./app/printer') //The printers
+require('./app/printer') //The printers
 const priorityBuild = require('./app/priority') //Generates a priority string
 
 const app = express()
@@ -44,11 +44,7 @@ app.post('/move', (request, response) => {
   //construct a board
   board = boardBuild.buildBoard(request.body)
   move = priorityBuild.buildPriority(request, board)
-  // const priorities = priorityBuild.buildPriority(request.body, board)
-  // console.log(priorities[0].directions)
-  // const move = priorityBuild.randomDirection(['left','right','up','down'])
-  // printer.printBoard(board) //printing pads the content of each cell. :-( remove before deploy
-
+  
   // Response data
   const data = {
     move: move, // one of: ['up','down','left','right']

@@ -1,4 +1,4 @@
-exports.printBoard = (board) => {
+printBoard = (board) => {
     let b = board
     //this just prints the board to the console
     b.forEach((y)=>{

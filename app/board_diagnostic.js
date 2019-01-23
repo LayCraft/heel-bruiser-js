@@ -7,8 +7,10 @@ module.exports.bestRouteBetweenPoints = () => {
     //best means most room to grow, most food, and least threats
 }
 module.exports.getOrthoganalPoints= (board, poi) => {
+    // console.log(poi)
+    // console.log(board)
     // make predictable list with invalid elements
-    return [
+    let orth = [
         //direction is away from the supplied point
         {x:poi.x+1, y:poi.y, direction:'right'},
         {x:poi.x-1, y:poi.y, direction:'left'},
@@ -20,10 +22,13 @@ module.exports.getOrthoganalPoints= (board, poi) => {
             return false
         } else return true
     })
+    console.log(orth)
+    //later return because of debugging
+    return orth
 }
 
 module.exports.inventoryArea = (board, poi) => {
-
+    // console.log(board)
     //flood fill traversable area and return the points and their distance for diagnostics
 
     // //this takes the point sample on the board and returns all traversable points and a count of threats, and food.
@@ -40,10 +45,16 @@ module.exports.inventoryArea = (board, poi) => {
         let p = unchecked.pop() //only gives x and y
         //only check unchecked locations
         if(!checked.includes(p)){
+            // console.log("This is the point.")
+            // console.log(p)
             //collect all orth points from the examined one.
-            console.log("Didn't include")
+            // printBoard(board)
+            // console.log("this is the board")
+            // console.log(board[0][0])
+            getOrthoganalPoints(board, p)
+                
             
-            
+
             // console.log(getOrthoganalPoints(board, p))
     //             .forEach(point => {
     //                 //save traversible points
