@@ -2,7 +2,7 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const logger = require('morgan')
 
-const boardBuild = require('./app/board') //The board related module
+const Board = require('./app/board') //The board related module
 const diagnostic = require('./app/board_diagnostic') //the route finding stuff
 const printer = require('./app/printer') //Global scope
 const priorityBuild = require('./app/priority') //Generates a priority string
@@ -40,14 +40,12 @@ app.post('/start', (request, response) => {
 // Handle POST request to '/move'
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
-  
-  //construct a board
-  board = boardBuild.buildBoard(request.body)
-  move = priorityBuild.buildPriority(request, board)
-  
+  let board = new Board(request.body)  
+  // console.log(board)
+
   // Response data
   const data = {
-    move: move, // one of: ['up','down','left','right']
+    move: 'left', // one of: ['up','down','left','right']
   }
 
   return response.json(data)
