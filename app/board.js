@@ -31,7 +31,7 @@ module.exports = class Board{
 
 	getSpace(poi) {
 		//What is at the location?
-		return this.board[poi.y][poi.y]
+		return this.board[poi.y][poi.x]
 	}
 
 	setSpace(poi){
