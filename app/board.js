@@ -1,4 +1,10 @@
 module.exports = class Board{
+	/**
+	 * Snakes are structured as objects. Each space of a snake has a link to the head.
+	 * The head contains a link to the tail. 
+	 * The head references the tail object that references the tail object that references the head object…
+	 * BE CAREFUL ABOUT ITERATION
+	 */
 	constructor(blob){
 		//the constructor is a function that builds a basic board from the data
 		//Meta about board
@@ -13,8 +19,6 @@ module.exports = class Board{
 			}
 		}
 
-		// console.log(blob)
-		
 		//write food onto the board
 		blob.board.food.forEach(nibble=>{
 			//all food should be marked on the board
@@ -24,9 +28,9 @@ module.exports = class Board{
 		
 		//write food onto the board
 		blob.board.snakes.forEach((snake)=> this._buildSnake(snake))
-
-		// this.setSpace({x:2,y:2,bork:"bork"})
-		console.log(this.board)
+		//TODO write the snake drawer
+		this.print()
+		// console.log(this.board)
 	}
 
 	getSpace(poi) {
@@ -62,9 +66,38 @@ module.exports = class Board{
 			} else return true
 		})
 	}
-	print(){}
 	_buildSnake(snake){
 		//handle all logic for placing snakes here
-		console.log(snake)
+		// console.log(snake)
+		snake.body.forEach((poi, i)=>{
+			if (i===0){
+				//is a head
+				//snake head holds meta info
+				poi['head']=true
+				poi['health']=snake.health
+				poi['size']=snake.body.length
+				poi['tailspace']=snake.body[snake.body.length-1]
+			}else if(i==snake.body.length-1){
+				// is a tail
+				poi['tail']=true
+				//all non body spaces know the head
+				poi['headspace']=snake.body[0]
+			} else {
+				//is a body
+				poi['body']=true
+				//all non body spaces know the head
+				poi['headspace']=snake.body[0]
+			}
+			poi['id']=snake.id
+			this.setSpace(poi)
+		})
+	}
+
+	print(){
+		this.board.forEach(y=>{
+			y.forEach(x=>{
+				console.log(x)
+			})
+		})
 	}
 }
