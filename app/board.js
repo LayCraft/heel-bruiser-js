@@ -89,15 +89,26 @@ module.exports = class Board{
 				poi['headspace']=snake.body[0]
 			}
 			poi['id']=snake.id
+			//set the space on the board
 			this.setSpace(poi)
 		})
 	}
 
 	print(){
-		this.board.forEach(y=>{
-			y.forEach(x=>{
-				console.log(x)
+    this.board.forEach((y)=>{
+			let yrow = '|'
+			y.forEach((x)=>{
+					// console.log(x)
+					let f = '~' //filler character
+					let xinfo = '-'
+					yrow = yrow + xinfo + '|'
 			})
-		})
+			console.log(yrow)
+			let line = ''
+			while(line.length<yrow.length){
+					line = line + '-'
+			}
+			console.log(line)
+	})
 	}
 }
