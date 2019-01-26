@@ -6,16 +6,18 @@ module.exports = class Board{
 		this.width = blob.board.width
 		this.height = blob.board.height
 		//make an empty 2d array to hold the POIs
-		this.board = Array(blob.board.height).fill(Array(blob.board.width).fill(null))
+		this.board = [...Array(this.height)].map(()=> [...Array(this.width)].fill(null))
 		// console.log(blob)
 		
 		//write food onto the board
-		// blob.board.food.forEach(bite=>{
-		// 	//all food should be marked on the board
-		// 	bite.food = true
-		// 	this.setSpace(bite)
-		// })
-		this.setSpace({x:2,y:2,bork:"bork"})
+		blob.board.food.forEach(bite=>{
+			//all food should be marked on the board
+			bite.food = true
+			this.setSpace(bite)
+		})
+		
+
+		// this.setSpace({x:2,y:2,bork:"bork"})
 		console.log(this.board)
 	}
 
@@ -28,11 +30,9 @@ module.exports = class Board{
 		//Set the location
 		//when a location is null set it to whatever is sent
 		if(!this.board[poi.y][poi.x]){
-			console.log("Null found")
 			this.board[poi.y][poi.x] = poi
 		} else {
 			console.log("Null not found")
-
 			//collect the existing space
 			let space = this.getSpace(poi)
 			// every key in the sent item should be added to the space
