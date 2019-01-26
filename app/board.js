@@ -7,15 +7,23 @@ module.exports = class Board{
 		this.height = blob.board.height
 		//make an empty 2d array to hold the POIs
 		this.board = [...Array(this.height)].map(()=> [...Array(this.width)].fill(null))
+		for(let y=0; y<this.height; y++){
+			for(let x=0; x<this.width; x++){
+				this.board[y][x] = {x:x, y:y}
+			}
+		}
+
 		// console.log(blob)
 		
 		//write food onto the board
-		blob.board.food.forEach(bite=>{
+		blob.board.food.forEach(nibble=>{
 			//all food should be marked on the board
-			bite.food = true
-			this.setSpace(bite)
+			nibble.food = true
+			this.setSpace(nibble)
 		})
 		
+		//write food onto the board
+		blob.board.snakes.forEach((snake)=> this._buildSnake(snake))
 
 		// this.setSpace({x:2,y:2,bork:"bork"})
 		console.log(this.board)
@@ -27,22 +35,16 @@ module.exports = class Board{
 	}
 
 	setSpace(poi){
-		//Set the location
-		//when a location is null set it to whatever is sent
-		if(!this.board[poi.y][poi.x]){
-			this.board[poi.y][poi.x] = poi
-		} else {
-			console.log("Null not found")
-			//collect the existing space
-			let space = this.getSpace(poi)
-			// every key in the sent item should be added to the space
-			poi.keys.forEach(key => {
-				//write the keys into space
-				space[key] = poi[key]
-			})
-			//put the space back into the board
-			this.setSpace(space)
-		}
+		//collect the existing space
+		let space = this.getSpace(poi)
+		// every key in the sent item should be added to the space
+		Object.keys(poi).forEach(key => {
+			// write the keys into space
+			space[key] = poi[key]
+		})
+		//put the space back into the board
+		this.board[poi.y][poi.x] = space
+
 	}
 
 	getOrth(poi){
@@ -61,4 +63,8 @@ module.exports = class Board{
 		})
 	}
 	print(){}
+	_buildSnake(snake){
+		//handle all logic for placing snakes here
+		console.log(snake)
+	}
 }
