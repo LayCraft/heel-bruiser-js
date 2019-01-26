@@ -8,14 +8,14 @@ module.exports = class Board{
 	constructor(blob){
 		//the constructor is a function that builds a basic board from the data
 		//Meta about board
-		this.id = blob.you.id
+		this.myId = blob.you.id
 		this.width = blob.board.width
 		this.height = blob.board.height
 		//make an empty 2d array to hold the POIs
 		this.board = [...Array(this.height)].map(()=> [...Array(this.width)].fill(null))
 		for(let y=0; y<this.height; y++){
 			for(let x=0; x<this.width; x++){
-				this.board[y][x] = {x:x, y:y}
+				this.board[y][x] = {x:x, y:y, traversable:true}
 			}
 		}
 
@@ -28,6 +28,7 @@ module.exports = class Board{
 		
 		//write food onto the board
 		blob.board.snakes.forEach((snake)=> this._buildSnake(snake))
+		// console.log(this.board)
 		//TODO write the snake drawer
 		this.print()
 		// console.log(this.board)
@@ -37,7 +38,6 @@ module.exports = class Board{
 		//What is at the location?
 		return this.board[poi.y][poi.x]
 	}
-
 	setSpace(poi){
 		//collect the existing space
 		let space = this.getSpace(poi)
@@ -48,9 +48,7 @@ module.exports = class Board{
 		})
 		//put the space back into the board
 		this.board[poi.y][poi.x] = space
-
 	}
-
 	getOrth(poi){
 		//return an array of all poi orthoganaly around the supplied one
 		return [
@@ -77,6 +75,7 @@ module.exports = class Board{
 				poi['health']=snake.health
 				poi['size']=snake.body.length
 				poi['tailspace']=snake.body[snake.body.length-1]
+				poi['id']=snake.id
 			}else if(i==snake.body.length-1){
 				// is a tail
 				poi['tail']=true
@@ -88,7 +87,6 @@ module.exports = class Board{
 				//all non body spaces know the head
 				poi['headspace']=snake.body[0]
 			}
-			poi['id']=snake.id
 			//set the space on the board
 			this.setSpace(poi)
 		})
@@ -99,15 +97,27 @@ module.exports = class Board{
 			let yrow = '|'
 			y.forEach((x)=>{
 					// console.log(x)
-					let f = '~' //filler character
-					let xinfo = '-'
-					yrow = yrow + xinfo + '|'
+					//six spaces should be enough to represent each contents ina  human readable way.
+					let f = ' ' //filler character should change if traversable
+					let xinfo = ''
+					//write the spaces
+					if (x.head) xinfo = xinfo + '✅'
+					if (x.food) xinfo = xinfo + '🐿️'
+					if (x.tail) xinfo = xinfo + '❇️'
+					if (x.body) xinfo = xinfo + '❎'
+					if (x.threat) xinfo = xinfo + '🔥'
+					if (!x.traversable) f = '🧱'
+
+					yrow = yrow + xinfo.padStart(6,f) + '|'
 			})
 			console.log(yrow)
 			let line = ''
+
+
 			while(line.length<yrow.length){
 					line = line + '-'
 			}
+			//print the depiction of the line
 			console.log(line)
 	})
 	}
