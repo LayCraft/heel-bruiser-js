@@ -108,6 +108,7 @@ const markOrthoganalDanger= (board, poi) => {
 }
 
 const getOrthoganalPoints= (board, poi) => {
+    console.log("BOARD Version of getorthagonalpoints")
     // make predictable list with invalid elements
     return [
         {x:poi.x+1, y:poi.y},

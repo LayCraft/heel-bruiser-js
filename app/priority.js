@@ -1,19 +1,20 @@
 const diagnostic = require('./board_diagnostic')
 
 //this sets a snake priority and determines what the snake should do
-module.exports.buildPriority = (request, board) =>{
-    let spaz = diagnostic.getOrthoganalPoints(board, request.body.you.body[0])
+exports.buildPriority = (request, board) =>{
+    let priorityList = diagnostic.getOrthoganalPoints(board, request.body.you.body[0])
         .filter(poi=>{
-            //remove all body points
-            let content = diagnostic.atLocation(board, poi).content.toLowerCase()
+            //read content from location
+            let content = diagnostic.atLocation(board, poi)
+            //if it contains a B or b it becomes impassable so filter will remove them
             if(content.includes('B')||content.includes('b')){
                 return false
             } else return true
+        }).map(poi=>{
+            // console.log(poi)
+            //each POI should have an inverntory added
+            return diagnostic.inventoryArea(board, poi)
         })
-    
-    spaz = spaz.map(poi=>{
-        return diagnostic.inventoryArea(board, poi)
-    })
     // console.log(spaz)
 
     //the list of strategies. Pushed into the list in order of priority
@@ -26,7 +27,6 @@ module.exports.buildPriority = (request, board) =>{
     // const food = request.board.food //array of objects with x: and y: keys
     // const health = request.you.health
     // const head = request.you.body[0]
-    const directions = ['left','right','up','down']
     //directions is the remaining available start directions
     // strat.push(dontCrash(directions, board, head))//don't collide with snake bodies and heads
     //don't move into a tail space if the head is by food
@@ -44,6 +44,7 @@ module.exports.buildPriority = (request, board) =>{
     // assign a value to each direction representing cumulative "do" score.
     // risk/reward needs an adjustment point
 
+    const directions = ['left','right','up','down']
 
     return diagnostic.randomDirection(directions)
 }

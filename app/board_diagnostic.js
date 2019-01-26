@@ -7,15 +7,15 @@ module.exports.bestRouteBetweenPoints = () => {
     //best means most room to grow, most food, and least threats
 }
 module.exports.getOrthoganalPoints= (board, poi) => {
-    // console.log(poi)
-    // console.log(board)
+    let x = poi.x
+    let y = poi.y
     // make predictable list with invalid elements
-    let orth = [
+    orth = [
         //direction is away from the supplied point
-        {x:poi.x+1, y:poi.y, direction:'right'},
-        {x:poi.x-1, y:poi.y, direction:'left'},
-        {x:poi.x, y:poi.y+1, direction:'down'},
-        {x:poi.x, y:poi.y-1, direction:'up'}
+        {x: x+1, y: y, direction:'right'},
+        {x: x-1, y: y, direction:'left'},
+        {x: x, y: y+1, direction:'down'},
+        {x: x, y: y-1, direction:'up'}
     ].filter(p=>{
         //remove all of the invalid elements
         if(p.x<0 || p.y<0 || p.y===board.length || p.x===board[0].length){
@@ -30,10 +30,9 @@ module.exports.getOrthoganalPoints= (board, poi) => {
 module.exports.inventoryArea = (board, poi) => {
     // console.log(board)
     //flood fill traversable area and return the points and their distance for diagnostics
-
-    // //this takes the point sample on the board and returns all traversable points and a count of threats, and food.
+    //this takes the point sample on the board and returns all traversable points and a count of threats, and food.
     let checked = []
-    let unchecked =[{x:poi.x, y:poi.y}]
+    // let unchecked =[{x:poi.x, y:poi.y}]
     let traversable = [] // the final collection of points that can be navigated
     let heads = 0
     let tails = 0
@@ -51,16 +50,15 @@ module.exports.inventoryArea = (board, poi) => {
             // printBoard(board)
             // console.log("this is the board")
             // console.log(board[0][0])
-            getOrthoganalPoints(board, p)
-                
+         
             
 
             // console.log(getOrthoganalPoints(board, p))
-    //             .forEach(point => {
-    //                 //save traversible points
-    //                 if (point.traversible) traversible.push(point)
-    //                 console.log("POINT!" + point)
-    //             });
+            // .forEach(point => {
+            //     //save traversible points
+            //     if (point.traversible) traversible.push(point)
+            //     console.log("POINT!" + point)
+            // });
         } else {
             console.log("Space was already checked")
         }
