@@ -30,9 +30,9 @@ module.exports = class Board{
 		
 		//write food onto the board
 		blob.board.snakes.forEach((snake)=> this._buildSnake(snake))
-		// console.log(this.board)
-		//TODO write the snake drawer
-		this.print()
+
+		// this.print()
+		this.traversableArea({x:1,y:1})
 		// console.log(this.board)
 	}
 
@@ -121,6 +121,48 @@ module.exports = class Board{
 			//get orthoganal points from element in unchecked list
 			//add unvisited traversable points to the unchecked list 
 			//add all points that are not traversable to the checked list
+		let area = 0
+		//get initial space so that this function works with fake coordinate objects if needed
+		let unchecked = [poi]
+		let checked = []
+		//make function for checking for roughly equal elements in checked list
+		let checkedHasElement = function(p){
+			//look through the checked list for an equal x and y value
+			console.log(checked)
+			for(let i=0; i<checked.length; i++){
+				if(checked[i].x===p.x && checked[i].y===p.y){
+					return true
+				}
+			}
+			return false
+		}
+
+		while(unchecked.length>0){
+			console.log(checked)
+			console.log(unchecked)
+			//save space for analysis
+			let p = unchecked.pop()
+			//record that it has been seen
+			checked.push(p)
+			
+			console.log("does checked have element")
+			console.log(checkedHasElement({x:2,y:1}))
+			console.log(checked)
+			console.log(unchecked)
+			// //add one to the area if traversable
+			// if (p.traversable) area ++
+			// //put into the checked list
+			// checked.push({x:p.x, y:y.y})
+			// //get connecting points
+			// this.getOrth(p).filter(connected=>{
+			// 	//if the point is in the checked area remove it
+			// 	if(checked.includes(connected)){
+			// 		return false
+			// 	} else return true
+			// }).forEach(connected=>unchecked.push(connected))
+		}
+		console.log('Area '+ area)
+
 	}
 
 	print(){
