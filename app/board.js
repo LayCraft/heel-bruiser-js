@@ -85,6 +85,7 @@ module.exports = class Board{
 				poi['tail']=true
 				//all non body spaces know the head
 				poi['headspace']=snake.body[0]
+				//do not know if traversable
 			} else {
 				//is a body
 				poi['body']=true
@@ -117,59 +118,63 @@ module.exports = class Board{
 	
 	traversableArea(poi){
 		//starting at this point how many traversable spaces are there?
+		//note: the input in this function assumes that the poi is not an actual board space.
+		//comes in as {x:1, y:1} which aren't confirmed on the board
+		//gathers { x: 1, y: 1, traversable: true } when examining points
 		//loop
 			//get orthoganal points from element in unchecked list
 			//add unvisited traversable points to the unchecked list 
 			//add all points that are not traversable to the checked list
-		let area = 0
+
 		//get initial space so that this function works with fake coordinate objects if needed
 		let unchecked = [poi]
 		let checked = []
+		let area = 0
 		//make function for checking for roughly equal elements in checked list
-		let checkedHasElement = function(p){
+		const checkedHasElement = function(p){
 			//look through the checked list for an equal x and y value
-			console.log(checked)
 			for(let i=0; i<checked.length; i++){
 				if(checked[i].x===p.x && checked[i].y===p.y){
+					console.log("element found in checked list")
 					return true
 				}
 			}
+			console.log("element not found in checked list")
 			return false
 		}
 
 		while(unchecked.length>0){
-			console.log(checked)
-			console.log(unchecked)
+			console.log("Checked "+ JSON.stringify(checked))
+			console.log("Unchecked"+ JSON.stringify(unchecked))
 			//save space for analysis
 			let p = unchecked.pop()
+
+			let realPoint = this.getSpace(p)
+			if(realPoint.traversable) {
+				//add a space to the area
+				area++
+				console.log("Is traversable! "+ area)
+
+				//add unchecked connected spaces to unchecked list
+				this.getOrth(p).forEach(element=>{
+					//if checked list doesn't have element
+					if(!checkedHasElement(element))	{
+						//push the point into unchecked list
+						unchecked.push(element)
+					}
+				})
+			}
+
 			//record that it has been seen
 			checked.push(p)
-			
-			console.log("does checked have element")
-			console.log(checkedHasElement({x:2,y:1}))
-			console.log(checked)
-			console.log(unchecked)
-			// //add one to the area if traversable
-			// if (p.traversable) area ++
-			// //put into the checked list
-			// checked.push({x:p.x, y:y.y})
-			// //get connecting points
-			// this.getOrth(p).filter(connected=>{
-			// 	//if the point is in the checked area remove it
-			// 	if(checked.includes(connected)){
-			// 		return false
-			// 	} else return true
-			// }).forEach(connected=>unchecked.push(connected))
 		}
-		console.log('Area '+ area)
-
+		return area
 	}
 
 	print(){
     this.board.forEach((y)=>{
 			let yrow = '|'
 			y.forEach((x)=>{
-					// console.log(x)
 					//six spaces should be enough to represent each contents ina  human readable way.
 					let f = ' ' //filler character should change if traversable
 					let xinfo = ''
