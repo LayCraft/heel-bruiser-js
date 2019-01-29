@@ -4,7 +4,6 @@ const logger = require('morgan')
 
 const Board = require('./app/board') //The board related module
 const diagnostic = require('./app/board_diagnostic') //the route finding stuff
-const printer = require('./app/printer') //Global scope
 const priorityBuild = require('./app/priority') //Generates a priority string
 
 const app = express()
