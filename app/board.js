@@ -32,9 +32,19 @@ module.exports = class Board{
 		blob.board.snakes.forEach((snake)=> this._buildSnake(snake))
 
 		// this.print()
-		this.traversableArea(this.myHead)
-		// this.print()
-
+		this.directions = this.getOrth(this.myHead).map(p=>{
+			//attach an area to the directions
+			p["area"] = this.traversableArea(p)
+			return p
+		}).filter(p=>{
+			if(p.area>0){
+				return true
+			} else return false
+		}).sort((a,b)=>{
+			if(a<b)return -1
+			if(a>b)return 1
+			if(a===b)return 0
+		})
 	}
 
 	getSpace(poi) {
@@ -56,10 +66,10 @@ module.exports = class Board{
 		//return an array of all poi orthoganaly around the supplied one
 		return [
 			//candidate locations
-			{x: poi.x-1, y: poi.y},
-			{x: poi.x+1, y: poi.y},
-			{x: poi.x, y: poi.y-1},
-			{x: poi.x, y: poi.y+1},
+			{x: poi.x-1, y: poi.y, direction: 'left'},
+			{x: poi.x, y: poi.y+1, direction: 'down'},
+			{x: poi.x+1, y: poi.y, direction: 'right'},
+			{x: poi.x, y: poi.y-1, direction: 'up'},
 		].filter(poi=>{
 			//remove all of the elements that are outside the board parameters
 			if(poi.x<0 || poi.y<0 || poi.y===this.height || poi.x===this.width){
