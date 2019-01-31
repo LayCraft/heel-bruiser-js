@@ -34,6 +34,7 @@ module.exports = class Board{
 		// this.print()
 		this.directions = this.getOrth(this.myHead).map(p=>{
 			//attach an area to the directions
+			console.log(this.getSpace(p))
 			p["area"] = this.traversableArea(p)
 			return p
 		}).filter(p=>{
@@ -173,7 +174,9 @@ module.exports = class Board{
 		}
 		return area
 	}
-
+	routesTo(poi){
+		//get the route to a particular board location
+	}
 	print(){
     this.board.forEach((y)=>{
 			let yrow = '|'
