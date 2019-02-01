@@ -31,7 +31,7 @@ app.post('/start', (request, response) => {
   // NOTE: Do something here to start the game
   // Response data
   const data = {
-    color: '#FED348',
+    color: '#00ffff',
   }
   return response.json(data)
 })
