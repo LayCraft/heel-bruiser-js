@@ -34,17 +34,20 @@ module.exports = class Board{
 		// this.print()
 		this.directions = this.getOrth(this.myHead).map(p=>{
 			//attach an area to the directions
-			console.log(this.getSpace(p))
 			p["area"] = this.traversableArea(p)
+			//copy useful properties to return directions
+			let actualSpace = this.getSpace(p)
+			if(actualSpace.danger) p["danger"] = actualSpace.danger
+			if(actualSpace.food) p["food"] = actualSpace.food
+			if(actualSpace.head) p["head"] = actualSpace.head
+			if(actualSpace.tail)p["tail"] = actualSpace.tail
+			if(actualSpace.body)p["body"] = actualSpace.body
+			if(actualSpace.traversable) p["traversable"] = actualSpace.traversable
 			return p
 		}).filter(p=>{
 			if(p.area>0){
 				return true
 			} else return false
-		}).sort((a,b)=>{
-			if(a<b)return -1
-			if(a>b)return 1
-			if(a===b)return 0
 		})
 	}
 

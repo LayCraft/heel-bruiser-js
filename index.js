@@ -40,6 +40,7 @@ app.post('/start', (request, response) => {
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
   let board = new Board(request.body)  
+  board.print()
   console.log(board.directions)
   // Response data
   const data = {
