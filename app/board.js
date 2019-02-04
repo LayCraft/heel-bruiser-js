@@ -49,6 +49,7 @@ module.exports = class Board{
 				return true
 			} else return false
 		})
+		//orthoganal spaces around non threatening heads are incentive spaces
 	}
 
 	getSpace(poi) {
@@ -115,11 +116,18 @@ module.exports = class Board{
 			// "Opinions" on what is dangerous
 			let orthPoi = this.getOrth(poi).map(p=>this.getSpace(p))
 			//is a head, is not me, is an equal or longer snake,
-			if(i===0 && snake.id!=this.myId && snake.body.length>=this.myLength){
+			if(i===0 && snake.id!=this.myId){
 				// mark orthoganal points by head as threats
 				orthPoi.forEach(p=>{
-					p['danger'] = true
-					this.setSpace(p)
+					if(snake.body.length>=this.myLength){
+						//the snake is dangerous
+						p['danger'] = true
+						this.setSpace(p)
+					} else {
+						//the snake is little and you should get into its headspace to kill it.
+						p['incentive'] = true
+						this.setSpace(p)
+					}
 				})
 			}
 			//is a head, is not me, has at least one food near the head
@@ -178,7 +186,23 @@ module.exports = class Board{
 		return area
 	}
 	routesTo(poi){
+		let start = {x:this.myHead.x, y: this.myHead.x}
+		let goal = {x:poi.x, y:poi.y}
+
+		let heuristic = (poi) => {
+			return Math.abs(poi.x-this.myHead.x)+Math.abs(poi.y-this.myHead.y)
+		}
+		// let reconstructPath = (cameFrom, current) =>{
+		// 	let totalPath = current
+		// }
+
+
+
 		//get the route to a particular board location
+		//find route to passed coordinate from snake head
+		// console.log(heuristic(goal))
+		return poi
+		
 	}
 	print(){
     this.board.forEach((y)=>{
