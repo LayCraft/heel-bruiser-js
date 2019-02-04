@@ -25,6 +25,7 @@ module.exports = class Board{
 		blob.board.food.forEach(nibble=>{
 			//all food should be marked on the board
 			nibble.food = true
+			nibble['incentive'] = true
 			this.setSpace(nibble)
 		})
 		
