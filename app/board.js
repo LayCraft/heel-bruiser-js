@@ -35,8 +35,14 @@ module.exports = class Board{
 		// this.print()
 		this.directions = this.getOrth(this.myHead).map(p=>{
 			//attach an area to the directions
-			p["area"] = this.traversableArea(p)
-			//copy useful properties to return directions
+			
+			//diagnostic object for space
+			let diagnosis= this.diagnoseArea(p)
+			p["areaCount"] = diagnosis.area
+			p["dangerCount"] = diagnosis.area
+			p["incentiveCount"] = diagnosis.incentive
+			
+			//copy the useful properties in and return directions
 			let actualSpace = this.getSpace(p)
 			if(actualSpace.danger) p["danger"] = actualSpace.danger
 			if(actualSpace.food) p["food"] = actualSpace.food
@@ -46,7 +52,7 @@ module.exports = class Board{
 			if(actualSpace.traversable) p["traversable"] = actualSpace.traversable
 			return p
 		}).filter(p=>{
-			if(p.area>0){
+			if(p.areaCount>0){
 				return true
 			} else return false
 		})
@@ -140,7 +146,7 @@ module.exports = class Board{
 		})
 	}
 	
-	traversableArea(poi){
+	diagnoseArea(poi){
 		//starting at this point how many traversable spaces are there?
 		//note: the input in this function assumes that the poi is not an actual board space.
 		//comes in as {x:1, y:1} which aren't confirmed on the board
@@ -154,6 +160,8 @@ module.exports = class Board{
 		let unchecked = [Object.assign(poi)]
 		let checked = []
 		let area = 0
+		let danger = 0
+		let incentive = 0
 
 		const listHasPoi = function(list, poi){
 			//look through the checked list for an equal x and y value
@@ -168,9 +176,14 @@ module.exports = class Board{
 		while(unchecked.length>0){
 			//save space for analysis
 			let point = unchecked.pop()
-			if(this.getSpace(point).traversable) {
+			let realPoint = this.getSpace(point)
+			if(realPoint.traversable) {
 				//count space
 				area++
+				//count danger and incentives
+				if(realPoint.danger) danger++
+				if(realPoint.incentive) incentive++
+
 				//add all connected points that aren't in lists
 				this.getOrth(point).filter(p=>{
 					//if point in unchecked return false
@@ -184,7 +197,8 @@ module.exports = class Board{
 			//record that it has been seen for traversability
 			checked.push(point)
 		}
-		return area
+		// Return object with counts of stuff
+		return {danger:danger, incentive:incentive, area:area}
 	}
 	routesTo(poi){
 		let start = {x:this.myHead.x, y: this.myHead.x}
@@ -219,7 +233,7 @@ module.exports = class Board{
 					if (x.tail) xinfo = xinfo + 'T'
 					if (x.danger) xinfo = xinfo + '!'
 					if (!x.traversable) f = '…'
-
+					if (x.incentive) f = '+'
 					yrow = yrow + xinfo.padEnd(6,f) + '|'
 			})
 			console.log(yrow)
