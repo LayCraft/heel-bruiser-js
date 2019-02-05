@@ -42,7 +42,7 @@ module.exports = class Board{
 			let diagnosis= this.diagnoseArea(p)
 			p["areaCount"] = diagnosis.area
 			p["dangerCount"] = diagnosis.dangers
-			p["incentiveCount"] = diagnosis.incentives
+			p["incentives"] = diagnosis.incentives
 			
 			//copy the useful properties in and return directions
 			let actualSpace = this.getSpace(p)
@@ -185,6 +185,7 @@ module.exports = class Board{
 				//count danger and incentives
 				if(realPoint.danger) danger++
 				if(realPoint.incentive) {
+					delete point.direction
 					//save all incentive spaces
 					incentives.push(point)
 				}
