@@ -13,11 +13,12 @@ module.exports = class Board{
 		this.myLength = blob.you.body.length
 		this.width = blob.board.width
 		this.height = blob.board.height
+		this.snakes = blob.board.snakes //hold onto the list of snakes
 		//make an empty 2d array to hold the POIs
 		this.board = [...Array(this.height)].map(()=> [...Array(this.width)].fill(null))
 		for(let y=0; y<this.height; y++){
 			for(let x=0; x<this.width; x++){
-				this.board[y][x] = {x:x, y:y, traversable:true}
+				this.board[y][x] = {x:x, y:y, traversable:true, danger:false}
 			}
 		}
 
@@ -25,22 +26,23 @@ module.exports = class Board{
 		blob.board.food.forEach(nibble=>{
 			//all food should be marked on the board
 			nibble.food = true
+			//we like food
 			nibble['incentive'] = true
 			this.setSpace(nibble)
 		})
 		
-		//write food onto the board
+		//write snakes onto the board
 		blob.board.snakes.forEach((snake)=> this._buildSnake(snake))
 
-		// this.print()
+		//examine all areas surrounding the head
 		this.directions = this.getOrth(this.myHead).map(p=>{
 			//attach an area to the directions
 			
 			//diagnostic object for space
 			let diagnosis= this.diagnoseArea(p)
 			p["areaCount"] = diagnosis.area
-			p["dangerCount"] = diagnosis.area
-			p["incentiveCount"] = diagnosis.incentive
+			p["dangerCount"] = diagnosis.dangers
+			p["incentiveCount"] = diagnosis.incentives
 			
 			//copy the useful properties in and return directions
 			let actualSpace = this.getSpace(p)
@@ -161,7 +163,7 @@ module.exports = class Board{
 		let checked = []
 		let area = 0
 		let danger = 0
-		let incentive = 0
+		let incentives = []
 
 		const listHasPoi = function(list, poi){
 			//look through the checked list for an equal x and y value
@@ -182,7 +184,10 @@ module.exports = class Board{
 				area++
 				//count danger and incentives
 				if(realPoint.danger) danger++
-				if(realPoint.incentive) incentive++
+				if(realPoint.incentive) {
+					//save all incentive spaces
+					incentives.push(point)
+				}
 
 				//add all connected points that aren't in lists
 				this.getOrth(point).filter(p=>{
@@ -198,7 +203,7 @@ module.exports = class Board{
 			checked.push(point)
 		}
 		// Return object with counts of stuff
-		return {danger:danger, incentive:incentive, area:area}
+		return {dangers:danger, incentives:incentives, area:area}
 	}
 	routesTo(poi){
 		let start = {x:this.myHead.x, y: this.myHead.x}
@@ -207,9 +212,9 @@ module.exports = class Board{
 		let heuristic = (poi) => {
 			return Math.abs(poi.x-this.myHead.x)+Math.abs(poi.y-this.myHead.y)
 		}
-		// let reconstructPath = (cameFrom, current) =>{
-		// 	let totalPath = current
-		// }
+
+		//while unchecked list 
+
 
 
 
