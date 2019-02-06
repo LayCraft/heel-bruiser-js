@@ -41,7 +41,7 @@ module.exports = class Board{
 			//diagnostic object for space
 			let diagnosis= this.diagnoseArea(p)
 			p["areaCount"] = diagnosis.area
-			p["dangerCount"] = diagnosis.dangers
+			p["dangers"] = diagnosis.dangers
 			p["incentives"] = diagnosis.incentives
 			
 			//copy the useful properties in and return directions
@@ -162,7 +162,7 @@ module.exports = class Board{
 		let unchecked = [Object.assign(poi)]
 		let checked = []
 		let area = 0
-		let danger = 0
+		let dangers = []
 		let incentives = []
 
 		const listHasPoi = function(list, poi){
@@ -183,7 +183,11 @@ module.exports = class Board{
 				//count space
 				area++
 				//count danger and incentives
-				if(realPoint.danger) danger++
+				if(realPoint.danger) {
+					delete point.direction
+					//save all dangers
+					dangers.push(point)
+				}
 				if(realPoint.incentive) {
 					delete point.direction
 					//save all incentive spaces
@@ -204,25 +208,37 @@ module.exports = class Board{
 			checked.push(point)
 		}
 		// Return object with counts of stuff
-		return {dangers:danger, incentives:incentives, area:area}
+		return {dangers:dangers, incentives:incentives, area:area}
 	}
-	routesTo(poi){
-		let start = {x:this.myHead.x, y: this.myHead.x}
+	routeTo(startPoi, goalPoi){
+		//g value is the cost to the next place
+		//h value is the heuristic value
+		console.log(startPoi)
+		console.log(goalPoi)
+
+		let start = {x:startPoi.x, y:startPoi.y, g:0}
 		let goal = {x:poi.x, y:poi.y}
 
-		let heuristic = (poi) => {
-			return Math.abs(poi.x-this.myHead.x)+Math.abs(poi.y-this.myHead.y)
-		}
+		//heuristic function basic distance Manhattan
+		let h=(poi) => {return Math.abs(poi.x-this.myHead.x)+Math.abs(poi.y-this.myHead.y)}
 
-		//while unchecked list 
+		//checked points
+		closedSet = []
+		//unchecked points
+		openSet = [start]
+		
+		/**
+		 * while elements in openSet
+		 * 	get element with lowest g value
+		 * 	if element's x and y are goal x and y
+		 * 		 parent of parent of parent etc and how many steps. the last element connected will be the start and we care about the direction
+		 * 	if no element in open set and no solution found return no solution
+		 * 	if element is heuristicallt closer to 
+		 */
 
 
-
-
-		//get the route to a particular board location
-		//find route to passed coordinate from snake head
-		// console.log(heuristic(goal))
-		return poi
+		
+		return startPoi
 		
 	}
 	print(){

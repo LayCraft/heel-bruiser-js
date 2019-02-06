@@ -3,8 +3,6 @@ const express = require('express')
 const logger = require('morgan')
 
 const Board = require('./app/board') //The board related module
-const diagnostic = require('./app/board_diagnostic') //the route finding stuff
-const priorityBuild = require('./app/priority') //Generates a priority string
 
 const app = express()
 const {
@@ -39,12 +37,9 @@ app.post('/start', (request, response) => {
 // Handle POST request to '/move'
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
-  let board = new Board(request.body)
-  
-  console.log(board.directions)
+  let board = new Board(request.body)  
   board.print()
-  // console.log(board.routesTo({x:0,y:0}))
-  // console.log(board.directions)
+  console.log(board.directions[0])
   // Response data
   const data = {
     move: board.directions[0].direction, // one of: ['up','down','left','right']
