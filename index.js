@@ -40,13 +40,13 @@ app.post('/move', (request, response) => {
   let board = new Board(request.body)  
   console.log(board.routeTo({x:0, y:0}, {x:3, y:3}))
   // board.print()
-  // console.log(board.directions[0])
   // Response data
-  console.log("Going "+board.directions[0].direction)
-  if(!board.directions[0].direction) console.log(board.directions)
+  //can't do this because there is occasionally not a direction
   const data = {
-    move: board.directions[0].direction, // one of: ['up','down','left','right']
+    move: board.directions[0].direction || 'up', // one of: ['up','down','left','right']
   }
+  console.log("Going " + data.move)
+  // if(!board.directions[0].direction) console.log(board.directions)
 
   return response.json(data)
 })

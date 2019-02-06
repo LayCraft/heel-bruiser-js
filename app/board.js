@@ -35,6 +35,7 @@ module.exports = class Board{
 		blob.board.snakes.forEach((snake)=> this._buildSnake(snake))
 
 		//examine all areas surrounding the head
+		//NOTE: will cause error 500 when there are no orthoganal moves
 		this.directions = this.getOrth(this.myHead).map(p=>{
 			//attach an area to the directions
 			
@@ -43,7 +44,7 @@ module.exports = class Board{
 			p["areaCount"] = diagnosis.area
 			p["dangers"] = diagnosis.dangers
 			p["incentives"] = diagnosis.incentives
-			
+			p["direction"] = this.directionFromHead(p)
 			//copy the useful properties in and return directions
 			let actualSpace = this.getSpace(p)
 			if(actualSpace.danger) p["danger"] = actualSpace.danger
@@ -80,10 +81,10 @@ module.exports = class Board{
 		//return an array of all poi orthoganaly around the supplied one
 		return [
 			//candidate locations
-			{x: poi.x-1, y: poi.y, direction: 'left'},
-			{x: poi.x, y: poi.y+1, direction: 'down'},
-			{x: poi.x+1, y: poi.y, direction: 'right'},
-			{x: poi.x, y: poi.y-1, direction: 'up'},
+			{x: poi.x-1, y: poi.y},
+			{x: poi.x, y: poi.y+1},
+			{x: poi.x+1, y: poi.y},
+			{x: poi.x, y: poi.y-1},
 		].filter(poi=>{
 			//remove all of the elements that are outside the board parameters
 			if(poi.x<0 || poi.y<0 || poi.y===this.height || poi.x===this.width){
@@ -147,7 +148,17 @@ module.exports = class Board{
 			}
 		})
 	}
-	
+	directionFromHead(poi){
+		if(poi.x<this.myHead.x){ 
+			return 'left'
+		} else if(poi.x>this.myHead.x){ 
+			return 'right'
+		} else if(poi.y<this.myHead.y){
+			return 'up'
+		} else if(poi.y>this.myHead.y){ 
+			return 'down'
+		}
+	}
 	diagnoseArea(poi){
 		//starting at this point how many traversable spaces are there?
 		//note: the input in this function assumes that the poi is not an actual board space.
