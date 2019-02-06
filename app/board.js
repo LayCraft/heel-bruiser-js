@@ -184,12 +184,10 @@ module.exports = class Board{
 				area++
 				//count danger and incentives
 				if(realPoint.danger) {
-					delete point.direction
 					//save all dangers
 					dangers.push(point)
 				}
 				if(realPoint.incentive) {
-					delete point.direction
 					//save all incentive spaces
 					incentives.push(point)
 				}
@@ -217,15 +215,15 @@ module.exports = class Board{
 		console.log(goalPoi)
 
 		let start = {x:startPoi.x, y:startPoi.y, g:0}
-		let goal = {x:poi.x, y:poi.y}
+		let goal = {x:goalPoi.x, y:goalPoi.y}
 
 		//heuristic function basic distance Manhattan
 		let h=(poi) => {return Math.abs(poi.x-this.myHead.x)+Math.abs(poi.y-this.myHead.y)}
 
 		//checked points
-		closedSet = []
+		// closedSet = []
 		//unchecked points
-		openSet = [start]
+		// openSet = [start]
 		
 		/**
 		 * while elements in openSet

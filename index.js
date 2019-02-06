@@ -38,9 +38,12 @@ app.post('/start', (request, response) => {
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
   let board = new Board(request.body)  
-  board.print()
-  console.log(board.directions[0])
+  console.log(board.routeTo({x:0, y:0}, {x:3, y:3}))
+  // board.print()
+  // console.log(board.directions[0])
   // Response data
+  console.log("Going "+board.directions[0].direction)
+  if(!board.directions[0].direction) console.log(board.directions)
   const data = {
     move: board.directions[0].direction, // one of: ['up','down','left','right']
   }
