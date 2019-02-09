@@ -220,19 +220,33 @@ module.exports = class Board{
 		return {dangers:dangers, incentives:incentives, area:area}
 	}
 	routeTo(startPoi, goalPoi){
+		
 		//g value is the cost of the route so far
 		//h value is the heuristic value
 		//f value is the sum of the heuristic plus the cost of the route so far 
-		// console.log(startPoi)
-		// console.log(goalPoi)
+		
+		//heuristic function basic distance Manhattan
+		let h = (poi1,poi2) => {return Math.abs(poi1.x-poi2.x)+Math.abs(poi1.y-poi2.y)}
 
-		let start = {x:startPoi.x, y:startPoi.y, g:0}
 		let goal = {x:goalPoi.x, y:goalPoi.y}
+		let start = {x:startPoi.x, y:startPoi.y}
+
 		// console.log(start)
 		// console.log(goal)
 
-		//heuristic function basic distance Manhattan
-		// let h=(poi) => {return Math.abs(poi.x-this.myHead.x)+Math.abs(poi.y-this.myHead.y)}
+
+		// let minFValue = (set) => {
+		// 	let lowestF //do not assign a F value to initial distance just check later
+		// 	//check all elements in list for lowest value of h+g
+		// 	set.forEach((poi, index)=>{
+		// 		//if first element we just take it.
+		// 		if(index===0){
+		// 			lowestF = poi
+		// 		} else {
+		
+		// 		}
+		// 	})
+		// } 
 
 		//checked points
 		let closedSet = []
@@ -241,9 +255,14 @@ module.exports = class Board{
 		
 		//loop until no elements in the open set
 		while(openSet.length>0){
-			console.log(openSet.pop())
-			
+			let current = openSet.pop()
+			//set distance to goal
+			current["h"] = h(current, goal)
+			//if there is no g property set it to 0 because this must be the start node
+			if(!current["g"]) current["g"]=0
+			console.log(current)
 		}
+		
 		/**
 		 * while elements in openSet
 		 * 	get element with lowest f value
