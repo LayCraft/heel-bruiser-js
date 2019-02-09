@@ -238,7 +238,12 @@ module.exports = class Board{
 		let closedSet = []
 		//unchecked points
 		let openSet = [start]
-				
+		
+		//loop until no elements in the open set
+		while(openSet.length>0){
+			console.log(openSet.pop())
+			
+		}
 		/**
 		 * while elements in openSet
 		 * 	get element with lowest f value
