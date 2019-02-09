@@ -220,25 +220,28 @@ module.exports = class Board{
 		return {dangers:dangers, incentives:incentives, area:area}
 	}
 	routeTo(startPoi, goalPoi){
-		//g value is the cost to the next place
+		//g value is the cost of the route so far
 		//h value is the heuristic value
-		console.log(startPoi)
-		console.log(goalPoi)
+		//f value is the sum of the heuristic plus the cost of the route so far 
+		// console.log(startPoi)
+		// console.log(goalPoi)
 
 		let start = {x:startPoi.x, y:startPoi.y, g:0}
 		let goal = {x:goalPoi.x, y:goalPoi.y}
+		// console.log(start)
+		// console.log(goal)
 
 		//heuristic function basic distance Manhattan
-		let h=(poi) => {return Math.abs(poi.x-this.myHead.x)+Math.abs(poi.y-this.myHead.y)}
+		// let h=(poi) => {return Math.abs(poi.x-this.myHead.x)+Math.abs(poi.y-this.myHead.y)}
 
 		//checked points
-		// closedSet = []
+		let closedSet = []
 		//unchecked points
-		// openSet = [start]
-		
+		let openSet = [start]
+				
 		/**
 		 * while elements in openSet
-		 * 	get element with lowest g value
+		 * 	get element with lowest f value
 		 * 	if element's x and y are goal x and y
 		 * 		 parent of parent of parent etc and how many steps. the last element connected will be the start and we care about the direction
 		 * 	if no element in open set and no solution found return no solution
@@ -247,7 +250,7 @@ module.exports = class Board{
 
 
 		
-		return startPoi
+		return 'fancy'
 		
 	}
 	print(){
