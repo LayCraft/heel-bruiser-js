@@ -221,19 +221,42 @@ module.exports = class Board{
 	}
 	routeTo(startPoi, goalPoi){
 		
-		//g value is the cost of the route so far
-		//h value is the heuristic value
-		//f value is the sum of the heuristic plus the cost of the route so far 
 		
+		//distance travelled
+		//g value is the cost of the route so far
+		let g = (poi) => {
+			//missing previous means start space
+			if(!poi.previous){ 
+				//start space is g value of 0
+				return 0 
+			} else {
+				let g = 1
+				//current space costs
+				let realSpace = this.getSpace(poi)
+				if(realSpace.danger) g=g+2 //danger counts as an additional double space to travel
+				if(realSpace.incentive) g-- //incentives act as reduced travel rate
+				if(g<0) g=0 //be sure that there are no values below zero. The previous space shouldn't be affected in evaluating this one.
+				//make g value
+				return g + poi.previous.g
+			}
+		}
+		//h value is the heuristic value
 		//heuristic function basic distance Manhattan
-		let h = (poi1,poi2) => {return Math.abs(poi1.x-poi2.x)+Math.abs(poi1.y-poi2.y)}
-
-		let goal = {x:goalPoi.x, y:goalPoi.y}
+		let h = (poi1, poi2) => {return Math.abs(poi1.x-poi2.x)+Math.abs(poi1.y-poi2.y)}
+		//f value is the sum of the heuristic plus the cost of the route so far 
+		//sum of distance travelled plus 
+		let f = (poi) => {return poi.g + poi.h}
+		
+		
+		let goal = {x:goalPoi.x, y:goalPoi.y} //can initialize distance to self
+		goal["h"] = h(goal, goal)//edge case check basically. lol
 		let start = {x:startPoi.x, y:startPoi.y}
+		start["h"] = h(start, goal) //initial heuristic distance
+		start["g"] = g(start)
+		start["f"] = f(start) //f value
 
-		// console.log(start)
-		// console.log(goal)
-
+		console.log(start)
+		console.log(goal)
 
 		// let minFValue = (set) => {
 		// 	let lowestF //do not assign a F value to initial distance just check later
@@ -255,12 +278,8 @@ module.exports = class Board{
 		
 		//loop until no elements in the open set
 		while(openSet.length>0){
-			let current = openSet.pop()
-			//set distance to goal
-			current["h"] = h(current, goal)
-			//if there is no g property set it to 0 because this must be the start node
-			if(!current["g"]) current["g"]=0
-			console.log(current)
+			let current = openSet.pop() // really needs to be the lowest g value
+			// console.log(current)
 		}
 		
 		/**
