@@ -220,9 +220,6 @@ module.exports = class Board{
 		return {dangers:dangers, incentives:incentives, area:area}
 	}
 	routeTo(startPoi, goalPoi){
-		
-		
-		//distance travelled
 		//g value is the cost of the route so far
 		let g = (poi) => {
 			//missing previous means start space
@@ -230,46 +227,31 @@ module.exports = class Board{
 				//start space is g value of 0
 				return 0 
 			} else {
-				let g = 1
+				//untested g
+				let g = poi.previous.g
 				//current space costs
 				let realSpace = this.getSpace(poi)
 				if(realSpace.danger) g=g+2 //danger counts as an additional double space to travel
-				if(realSpace.incentive) g-- //incentives act as reduced travel rate
-				if(g<0) g=0 //be sure that there are no values below zero. The previous space shouldn't be affected in evaluating this one.
-				//make g value
-				return g + poi.previous.g
+				if(realSpace.incentive) g=g-2 //incentives act as reduced travel rate
+				if(g<0) g=0 //be sure that there are no values below zero.
+				return g
 			}
 		}
-		//h value is the heuristic value
-		//heuristic function basic distance Manhattan
+		//h value is the heuristic value distance Manhattan
 		let h = (poi1, poi2) => {return Math.abs(poi1.x-poi2.x)+Math.abs(poi1.y-poi2.y)}
 		//f value is the sum of the heuristic plus the cost of the route so far 
-		//sum of distance travelled plus 
 		let f = (poi) => {return poi.g + poi.h}
 		
-		
 		let goal = {x:goalPoi.x, y:goalPoi.y} //can initialize distance to self
-		goal["h"] = h(goal, goal)//edge case check basically. lol
+		goal["h"] = h(goal, goal) //edge case check basically. return 0
 		let start = {x:startPoi.x, y:startPoi.y}
 		start["h"] = h(start, goal) //initial heuristic distance
-		start["g"] = g(start)
+		start["g"] = g(start) 
 		start["f"] = f(start) //f value
-
-		console.log(start)
-		console.log(goal)
-
-		// let minFValue = (set) => {
-		// 	let lowestF //do not assign a F value to initial distance just check later
-		// 	//check all elements in list for lowest value of h+g
-		// 	set.forEach((poi, index)=>{
-		// 		//if first element we just take it.
-		// 		if(index===0){
-		// 			lowestF = poi
-		// 		} else {
-		
-		// 		}
-		// 	})
-		// } 
+		// console.log("start")
+		// console.log(start)
+		// console.log("goal")
+		// console.log(goal)
 
 		//checked points
 		let closedSet = []
@@ -297,31 +279,30 @@ module.exports = class Board{
 		
 	}
 	print(){
-    this.board.forEach((y)=>{
-			let yrow = '|'
-			y.forEach((x)=>{
-					//six spaces should be enough to represent each contents ina  human readable way.
-					let f = ' ' //filler character should change if traversable
-					let xinfo = ''
-					//write the spaces
-					if (x.food) xinfo = xinfo + 'F'
-					if (x.head) xinfo = xinfo + 'H'
-					if (x.body) xinfo = xinfo + 'B'
-					if (x.tail) xinfo = xinfo + 'T'
-					if (x.danger) xinfo = xinfo + '!'
-					if (!x.traversable) f = '…'
-					if (x.incentive) f = '+'
-					yrow = yrow + xinfo.padEnd(6,f) + '|'
-			})
-			console.log(yrow)
-			let line = ''
+		this.board.forEach((y)=>{
+				let yrow = '|'
+				y.forEach((x)=>{
+						//six spaces should be enough to represent each contents ina  human readable way.
+						let f = ' ' //filler character should change if traversable
+						let xinfo = ''
+						//write the spaces
+						if (x.food) xinfo = xinfo + 'F'
+						if (x.head) xinfo = xinfo + 'H'
+						if (x.body) xinfo = xinfo + 'B'
+						if (x.tail) xinfo = xinfo + 'T'
+						if (x.danger) xinfo = xinfo + '!'
+						if (!x.traversable) f = '…'
+						if (x.incentive) f = '+'
+						yrow = yrow + xinfo.padEnd(6,f) + '|'
+				})
+				console.log(yrow)
+				let line = ''
 
-
-			while(line.length<yrow.length){
-					line = line + '-'
-			}
-			//print the depiction of the line
-			console.log(line)
-	})
+				while(line.length<yrow.length){
+						line = line + '-'
+				}
+				//print the depiction of the line
+				console.log(line)
+		})
 	}
 }
