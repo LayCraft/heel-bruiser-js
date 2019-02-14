@@ -241,7 +241,7 @@ module.exports = class Board{
 		let h = (poi1, poi2) => {return Math.abs(poi1.x-poi2.x)+Math.abs(poi1.y-poi2.y)}
 		//f value is the sum of the heuristic plus the cost of the route so far 
 		let f = (poi) => {return poi.g + poi.h}
-		
+
 		let goal = {x:goalPoi.x, y:goalPoi.y} //can initialize distance to self
 		goal["h"] = h(goal, goal) //edge case check basically. return 0
 		let start = {x:startPoi.x, y:startPoi.y}
@@ -260,8 +260,20 @@ module.exports = class Board{
 		
 		//loop until no elements in the open set
 		while(openSet.length>0){
-			let current = openSet.pop() // really needs to be the lowest g value
+			//pop lowest f value. Will be on end because of sort at end of loop
+			let current = openSet.pop()
+			// add newly seen connected poi into the openset 
+
 			// console.log(current)
+
+
+			//sort the openset by the highest to the lowest F
+			//if I'm going to be inefficient then I should at least be elegant about it.
+			openSet =  openSet.sort((a,b)=>{
+				if(a.f===b.f) return 0
+				if(a.f<b.f) return 1
+				if(a.f>b.f) return -1
+			}) 
 		}
 		
 		/**
