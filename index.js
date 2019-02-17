@@ -40,15 +40,16 @@ app.post('/move', (request, response) => {
   let board = new Board(request.body)
   let diagnosedDirections = board.directions
     .map(direction=>{
-      console.log(direction)
-      // //each incentive gets assigned a list of moves to get there instead of just a coordinate
+      // each incentive gets assigned a list of moves to get there instead of just a coordinate
+      console.log("Destination ", direction.incentives[0])
+      console.log("Route to ", board.routeTo(direction, direcion.incentives[0], direction.area))
       // direction.incentives = direction.incentives
       //   .map(incentive=>{
       //     return board.routeTo(direction, incentive, direction.areaCount)
       //   })
       return direction
     })
-  console.log(diagnosedDirections)
+  // console.log(diagnosedDirections)
   // board.print()
   // Response data
   //can't do this because there is occasionally not a direction
