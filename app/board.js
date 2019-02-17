@@ -241,41 +241,124 @@ module.exports = class Board{
 		let h = (poi1, poi2) => {return Math.abs(poi1.x-poi2.x)+Math.abs(poi1.y-poi2.y)}
 		//f value is the sum of the heuristic plus the cost of the route so far 
 		let f = (poi) => {return poi.g + poi.h}
-
+		let setIncludes = (set, poi) => {
+			let includes = false;
+			set.forEach(p=>{
+				if(p.y===poi.y &&p.x===poi.x) includes = true
+			})
+			return includes
+		}
+		let buildFinalPath = (poi, accumulator=[]) => {
+			//function takes poi and looks traverses all previous
+			accumulator.push(poi)
+			if(!poi.previous) {
+				// at first poi 
+				return accumulator
+			} else {
+				//need to collect current poi and traverse all previous steps
+				buildFinalPath(poi.previous, accumulator)
+			}
+		}
+		
 		let goal = {x:goalPoi.x, y:goalPoi.y} //can initialize distance to self
 		goal["h"] = h(goal, goal) //edge case check basically. return 0
 		let start = {x:startPoi.x, y:startPoi.y}
 		start["h"] = h(start, goal) //initial heuristic distance
 		start["g"] = g(start) 
 		start["f"] = f(start) //f value
-		// console.log("start")
-		// console.log(start)
-		// console.log("goal")
-		// console.log(goal)
 
 		//checked points
 		let closedSet = []
 		//unchecked points
 		let openSet = [start]
 		
-		//loop until no elements in the open set
+		//loop until no elements are unchecked in the open set
 		while(openSet.length>0){
-			//pop lowest f value. Will be on end because of sort at end of loop
-			let current = openSet.pop()
-			// add newly seen connected poi into the openset 
+			//collect the coordinate and the actual space for analysis
+			let currentPoi = openSet.pop()
+			let currentContents = this.getSpace(currentPoi)
 
-			// console.log(current)
+			if(currentPoi.x === goal.x && currentPoi.y === goal.y){
+				//you are at destination
+				return buildFinalPath(currentPoi)
+			} else if (!currentContents.traversable){
+				//if it is intraversable it is useless
+				closedSet.push(currentPoi)
+			} else {
+				//check for connected spaces
+				// add points not found in the closed set to the open set
+				this.getOrth(currentPoi)
+					.filter(poi=>!setIncludes(closedSet, poi) && !setIncludes(openSet, poi))
+					.forEach(poi=>{
+						//assign things that we know to the new pois
+						poi["previous"]=currentPoi
+						poi["h"] = h(poi, goal)
+						poi["g"] = g(poi)
+						poi["f"] = f(poi)
+						openSet.push(poi)
+					})
+				console.log(openSet)
+			}
+			// //sort the openset by the highest to the lowest F
+			// openSet =  openSet.sort((a,b)=>{
+			// 	if(a.f===b.f) return 0
+			// 	if(a.f<b.f) return 1
+			// 	if(a.f>b.f) return -1
+			// }) 
 
-
-			//sort the openset by the highest to the lowest F
-			//if I'm going to be inefficient then I should at least be elegant about it.
-			openSet =  openSet.sort((a,b)=>{
-				if(a.f===b.f) return 0
-				if(a.f<b.f) return 1
-				if(a.f>b.f) return -1
-			}) 
 		}
-		
+
+		//loop until no elements in the open set
+		// while(openSet.length>0){
+		// 	console.log(openSet)
+		// 	console.log(closedSet)
+		// 	// pop lowest f value. Will be on end because of sort at end of loop
+		// 	let current = openSet.pop()	
+		// 	let currentReal = this.getSpace(current)
+
+		// 	//Are we at destination?
+		// 	if(current.x === goal.x && current.y === goal.y){
+		// 		console.log("Made it to goal.")
+		// 		//path collection to return
+		// 		let path = []
+		// 		//loop until null from first node
+		// 		while(current){
+		// 			path.push(current)
+		// 			//evaluate the previous point
+		// 			current = current.previous
+		// 		}
+		// 		console.log(path.reverse())
+		// 		//reverse the list of points
+		// 		return path.reverse() 
+		// 		//FINAL RETURN OF SHORTEST DISTANCE PATH
+		// 	}
+
+		// 	//if it is traversable it may have connected spaces to add
+		// 	if(currentReal.traversable){
+		// 		// add points not found in the closed set to the open set
+		// 		this.getOrth(current).filter(poi=>!setIncludes(closedSet, poi))
+		// 			.forEach(poi=>{
+		// 				//assign things that we know to the new pois
+		// 				poi["previous"]=current
+		// 				poi["h"] = h(poi, goal)
+		// 				poi["g"] = g(poi)
+		// 				poi["f"] = f(poi)
+		// 				openSet.push(poi)
+		// 			})
+		// 	} else {
+		// 		//it is not traversable put into closed set.
+		// 		closedSet.push(current)
+		// 	}
+
+		// 	//sort the openset by the highest to the lowest F
+		// 	openSet =  openSet.sort((a,b)=>{
+		// 		if(a.f===b.f) return 0
+		// 		if(a.f<b.f) return 1
+		// 		if(a.f>b.f) return -1
+		// 	}) 
+		// }
+		//if it gets here there is no path to the destination so it should return null
+		return null
 		/**
 		 * while elements in openSet
 		 * 	get element with lowest f value
@@ -284,11 +367,7 @@ module.exports = class Board{
 		 * 	if no element in open set and no solution found return no solution
 		 * 	if element is heuristicallt closer to 
 		 */
-
-
-		
-		return 'fancy'
-		
+			
 	}
 	print(){
 		this.board.forEach((y)=>{
