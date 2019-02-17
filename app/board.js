@@ -220,7 +220,8 @@ module.exports = class Board{
 		return {dangers:dangers, incentives:incentives, area:area}
 	}
 
-	routeTo(startPoi, goalPoi){
+	routeTo(startPoi, goalPoi, maxSpace=this.width*this.height){
+
 		//return a list of spaces to travel to get to the destination
 		//g value is the cost of the route so far
 		const g = (poi) => {
@@ -259,9 +260,6 @@ module.exports = class Board{
 		}
 		//traverse the array of poi starting at the end and going back to start
 		const buildFinalPath = (poi, accumulator=[]) => {
-			console.log("building final path")
-			console.log(poi)
-			console.log(accumulator)
 			//function takes poi and looks traverses all previous
 			accumulator.push({x:poi.x, y:poi.y})
 			if(!poi.previous) {
@@ -287,46 +285,44 @@ module.exports = class Board{
 		let closedSet = [] //points that are already evaluated
 		let openSet = [start] //unevaluated points
 		
-		let finalPath = buildFinalPath(testPoi)
-		console.log(finalPath)
 
-		//loop until no elements are unchecked in the open set
-		// while(openSet.length>0){
-		// 	//collect the coordinate and the actual space for analysis
-		// 	let currentPoi = openSet.pop()
-		// 	let currentContents = this.getSpace(currentPoi)
+		// loop until no elements are unchecked in the open set
+		while(openSet.length>0){
+			//open set length cannot be greater than the area on the board
+			//collect the coordinate and the actual space for analysis
+			let currentPoi = openSet.pop()
+			let currentContents = this.getSpace(currentPoi)
 
-		// 	if(currentPoi.x === goal.x && currentPoi.y === goal.y){
-		// 		console.log("Found final destination!")
-		// 		//you are at destination
-		// 		return buildFinalPath(currentPoi)
-		// 	} else if (!currentContents.traversable){
-		// 		//if it is intraversable it is useless
-		// 		closedSet.push(currentPoi)
-		// 	} else {
-		// 		//check for connected spaces
-		// 		// add points not found in the closed set to the open set
-		// 		this.getOrth(currentPoi)
-		// 			.filter(poi=>!setIncludes(closedSet, poi))
-		// 			.forEach(poi=>{
-		// 				//if it is already in open set 
-		// 				//assign things that we know to the new pois
-		// 				poi["previous"]=currentPoi
-		// 				poi["h"] = h(poi, goal)
-		// 				poi["g"] = g(poi)
-		// 				poi["f"] = f(poi)
-		// 				openSet.push(poi)
-		// 			})
-		// 		console.log(openSet)
-		// 	}
-		// 	//sort the openset by the highest to the lowest F
-		// 	openSet =  openSet.sort((a,b)=>{
-		// 		if(a.f===b.f) return 0
-		// 		if(a.f<b.f) return 1
-		// 		if(a.f>b.f) return -1
-		// 	}) 
+			if(currentPoi.x === goal.x && currentPoi.y === goal.y){
+				console.log("Found final destination!")
+				//you are at destination
+				return buildFinalPath(currentPoi)
+			} else if (!currentContents.traversable){
+				//if it is intraversable it is useless
+				closedSet.push(currentPoi)
+			} else {
+				//check for connected spaces
+				// add points not found in the closed set to the open set
+				this.getOrth(currentPoi)
+					.filter(poi=>!setIncludes(closedSet, poi)&&!setIncludes(openSet, poi))
+					.forEach(poi=>{
+						//if it is already in open set 
+						//assign things that we know to the new pois
+						poi["previous"]=currentPoi
+						poi["h"] = h(poi, goal)
+						poi["g"] = g(poi)
+						poi["f"] = f(poi)
+						openSet.push(poi)
+					})
+			}
+			//sort the openset by the highest to the lowest F
+			openSet =  openSet.sort((a,b)=>{
+				if(a.f===b.f) return 0
+				if(a.f<b.f) return 1
+				if(a.f>b.f) return -1
+			}) 
 
-		// }
+		}
 		return null
 		/**
 		 * while elements in openSet

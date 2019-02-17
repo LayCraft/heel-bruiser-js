@@ -39,9 +39,9 @@ app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
   let board = new Board(request.body)
   let diagnosis = board.diagnoseArea(board.directions[0])
-  // console.log(diagnosis.incentives[0])
   // console.log(board.directions[0])
-  board.routeTo(board.directions[0], diagnosis.incentives[0])
+  console.log("Route to " + diagnosis.incentives[0] )
+  console.log(board.routeTo(board.directions[0], diagnosis.incentives[0], diagnosis.area))
   // board.print()
   // Response data
   //can't do this because there is occasionally not a direction
