@@ -40,8 +40,10 @@ app.post('/move', (request, response) => {
   let board = new Board(request.body)
   let diagnosis = board.diagnoseArea(board.directions[0])
   // console.log(board.directions[0])
-  console.log("Route to " + diagnosis.incentives[0] )
-  console.log(board.routeTo(board.directions[0], diagnosis.incentives[0], diagnosis.area))
+
+  console.log("Route to " + JSON.stringify(diagnosis.incentives[0]))
+  // console.log(board.routeTo(board.directions[0], diagnosis.incentives[0], diagnosis.area))
+  console.log(board.routeTo({x:2,y:0}, {x:2,y:4}))
   // board.print()
   // Response data
   //can't do this because there is occasionally not a direction

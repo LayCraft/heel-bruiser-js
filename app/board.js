@@ -220,7 +220,7 @@ module.exports = class Board{
 		return {dangers:dangers, incentives:incentives, area:area}
 	}
 
-	routeTo(startPoi, goalPoi, maxSpace=this.width*this.height){
+	routeTo(startPoi, goalPoi, maxArea=this.width*this.height){
 
 		//return a list of spaces to travel to get to the destination
 		//g value is the cost of the route so far
@@ -281,13 +281,11 @@ module.exports = class Board{
 		start["g"] = g(start) //distance travelled is zero for this.
 		start["f"] = f(start) //f value
 
-		
 		let closedSet = [] //points that are already evaluated
 		let openSet = [start] //unevaluated points
-		
 
 		// loop until no elements are unchecked in the open set
-		while(openSet.length>0){
+		while(openSet.length>0 && openSet.length<maxArea){
 			//open set length cannot be greater than the area on the board
 			//collect the coordinate and the actual space for analysis
 			let currentPoi = openSet.pop()
@@ -324,15 +322,6 @@ module.exports = class Board{
 
 		}
 		return null
-		/**
-		 * while elements in openSet
-		 * 	get element with lowest f value
-		 * 	if element's x and y are goal x and y
-		 * 		 parent of parent of parent etc and how many steps. the last element connected will be the start and we care about the direction
-		 * 	if no element in open set and no solution found return no solution
-		 * 	if element is heuristicallt closer to 
-		 */
-			
 	}
 	print(){
 		this.board.forEach((y)=>{
