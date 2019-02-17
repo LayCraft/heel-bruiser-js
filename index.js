@@ -37,8 +37,10 @@ app.post('/start', (request, response) => {
 // Handle POST request to '/move'
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
-  let board = new Board(request.body)  
-  board.routeTo({x:1, y:1}, {x:9, y:9})
+  let board = new Board(request.body)
+  let diagnosis = board.diagnoseArea(board.directions[0])
+  console.log(diagnosis)
+  // board.routeTo(board.incentives)
   // board.print()
   // Response data
   //can't do this because there is occasionally not a direction

@@ -170,7 +170,7 @@ module.exports = class Board{
 			//add all points that are not traversable to the checked list
 
 		//assign initial so that this function works with fake coordinate objects if needed
-		let unchecked = [Object.assign(poi)]
+		let unchecked = [{x:poi.x, y:poi.y}]
 		let checked = []
 		let area = 0
 		let dangers = []
@@ -220,8 +220,9 @@ module.exports = class Board{
 		return {dangers:dangers, incentives:incentives, area:area}
 	}
 	routeTo(startPoi, goalPoi){
+		//return a list of spaces to travel to get to the destination
 		//g value is the cost of the route so far
-		let g = (poi) => {
+		const g = (poi) => {
 			//missing previous means start space
 			if(!poi.previous){ 
 				//start space is g value of 0
@@ -238,17 +239,25 @@ module.exports = class Board{
 			}
 		}
 		//h value is the heuristic value distance Manhattan
-		let h = (poi1, poi2) => {return Math.abs(poi1.x-poi2.x)+Math.abs(poi1.y-poi2.y)}
+		const h = (poi1, poi2) => {return Math.abs(poi1.x-poi2.x)+Math.abs(poi1.y-poi2.y)}
 		//f value is the sum of the heuristic plus the cost of the route so far 
-		let f = (poi) => {return poi.g + poi.h}
-		let setIncludes = (set, poi) => {
+		const f = (poi) => {return poi.g + poi.h}
+		//are the two poi the same x and y values?
+		const samePoi = (poi1, poi2) => {
+			if(poi1.x === poi2.x && poi1.y === poi2.y){
+				return true
+			} else return false
+		}			
+		//does the set include an equivalent x and y value?
+		const setIncludes = (set, poi) => {
 			let includes = false;
 			set.forEach(p=>{
-				if(p.y===poi.y &&p.x===poi.x) includes = true
+				if(samePoi(poi, p)) includes = true
 			})
 			return includes
 		}
-		let buildFinalPath = (poi, accumulator=[]) => {
+		//traverse the array of poi
+		const buildFinalPath = (poi, accumulator=[]) => {
 			//function takes poi and looks traverses all previous
 			accumulator.push(poi)
 			if(!poi.previous) {
@@ -260,17 +269,19 @@ module.exports = class Board{
 			}
 		}
 		
-		let goal = {x:goalPoi.x, y:goalPoi.y} //can initialize distance to self
+		// clean anything that the caller sent into mere x and y.
+		const goal = {x:goalPoi.x, y:goalPoi.y} //can initialize distance to self
+		const start = {x:startPoi.x, y:startPoi.y}
+
+		// assign values to start and goal using helper functions
 		goal["h"] = h(goal, goal) //edge case check basically. return 0
-		let start = {x:startPoi.x, y:startPoi.y}
 		start["h"] = h(start, goal) //initial heuristic distance
-		start["g"] = g(start) 
+		start["g"] = g(start) //distance travelled is zero for this.
 		start["f"] = f(start) //f value
 
-		//checked points
-		let closedSet = []
-		//unchecked points
-		let openSet = [start]
+		
+		let closedSet = [] //points that are already evaluated
+		let openSet = [start] //unevaluated points
 		
 		//loop until no elements are unchecked in the open set
 		while(openSet.length>0){
@@ -279,6 +290,7 @@ module.exports = class Board{
 			let currentContents = this.getSpace(currentPoi)
 
 			if(currentPoi.x === goal.x && currentPoi.y === goal.y){
+				console.log("Found final destination!")
 				//you are at destination
 				return buildFinalPath(currentPoi)
 			} else if (!currentContents.traversable){
@@ -288,8 +300,9 @@ module.exports = class Board{
 				//check for connected spaces
 				// add points not found in the closed set to the open set
 				this.getOrth(currentPoi)
-					.filter(poi=>!setIncludes(closedSet, poi) && !setIncludes(openSet, poi))
+					.filter(poi=>!setIncludes(closedSet, poi))
 					.forEach(poi=>{
+						//if it is already in open set 
 						//assign things that we know to the new pois
 						poi["previous"]=currentPoi
 						poi["h"] = h(poi, goal)
@@ -299,65 +312,14 @@ module.exports = class Board{
 					})
 				console.log(openSet)
 			}
-			// //sort the openset by the highest to the lowest F
-			// openSet =  openSet.sort((a,b)=>{
-			// 	if(a.f===b.f) return 0
-			// 	if(a.f<b.f) return 1
-			// 	if(a.f>b.f) return -1
-			// }) 
+			//sort the openset by the highest to the lowest F
+			openSet =  openSet.sort((a,b)=>{
+				if(a.f===b.f) return 0
+				if(a.f<b.f) return 1
+				if(a.f>b.f) return -1
+			}) 
 
 		}
-
-		//loop until no elements in the open set
-		// while(openSet.length>0){
-		// 	console.log(openSet)
-		// 	console.log(closedSet)
-		// 	// pop lowest f value. Will be on end because of sort at end of loop
-		// 	let current = openSet.pop()	
-		// 	let currentReal = this.getSpace(current)
-
-		// 	//Are we at destination?
-		// 	if(current.x === goal.x && current.y === goal.y){
-		// 		console.log("Made it to goal.")
-		// 		//path collection to return
-		// 		let path = []
-		// 		//loop until null from first node
-		// 		while(current){
-		// 			path.push(current)
-		// 			//evaluate the previous point
-		// 			current = current.previous
-		// 		}
-		// 		console.log(path.reverse())
-		// 		//reverse the list of points
-		// 		return path.reverse() 
-		// 		//FINAL RETURN OF SHORTEST DISTANCE PATH
-		// 	}
-
-		// 	//if it is traversable it may have connected spaces to add
-		// 	if(currentReal.traversable){
-		// 		// add points not found in the closed set to the open set
-		// 		this.getOrth(current).filter(poi=>!setIncludes(closedSet, poi))
-		// 			.forEach(poi=>{
-		// 				//assign things that we know to the new pois
-		// 				poi["previous"]=current
-		// 				poi["h"] = h(poi, goal)
-		// 				poi["g"] = g(poi)
-		// 				poi["f"] = f(poi)
-		// 				openSet.push(poi)
-		// 			})
-		// 	} else {
-		// 		//it is not traversable put into closed set.
-		// 		closedSet.push(current)
-		// 	}
-
-		// 	//sort the openset by the highest to the lowest F
-		// 	openSet =  openSet.sort((a,b)=>{
-		// 		if(a.f===b.f) return 0
-		// 		if(a.f<b.f) return 1
-		// 		if(a.f>b.f) return -1
-		// 	}) 
-		// }
-		//if it gets here there is no path to the destination so it should return null
 		return null
 		/**
 		 * while elements in openSet
