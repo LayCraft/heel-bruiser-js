@@ -38,12 +38,17 @@ app.post('/start', (request, response) => {
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
   let board = new Board(request.body)
-  let diagnosis = board.diagnoseArea(board.directions[0])
-  // console.log(board.directions[0])
-
-  console.log("Route to " + JSON.stringify(diagnosis.incentives[0]))
-  // console.log(board.routeTo(board.directions[0], diagnosis.incentives[0], diagnosis.area))
-  console.log(board.routeTo({x:2,y:0}, {x:2,y:4}))
+  let diagnosedDirections = board.directions
+    .map(direction=>{
+      console.log(direction)
+      // //each incentive gets assigned a list of moves to get there instead of just a coordinate
+      // direction.incentives = direction.incentives
+      //   .map(incentive=>{
+      //     return board.routeTo(direction, incentive, direction.areaCount)
+      //   })
+      return direction
+    })
+  console.log(diagnosedDirections)
   // board.print()
   // Response data
   //can't do this because there is occasionally not a direction
