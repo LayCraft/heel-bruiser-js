@@ -221,16 +221,20 @@ module.exports = class Board{
 	}
 
 	routeTo(startPoi, goalPoi, maxArea=this.width*this.height){
+		//clean the points
+		const start = {x:startPoi.x , y:startPoi.y}
+		const goal = {x:goalPoi.x, y:goalPoi.y}
+
 		//be sure that start and goal are within board: sanity check
-		if( startPoi.x <0 || startPoi.y <0 ||
-			startPoi.x===this.width || startPoi.y===this.height || 
-			goalPoi.x <0 || goalPoi.y <0 ||
-			goalPoi.x===this.width || goalPoi.y===this.height) return null
-
-
+		if( start.x <0 || start.y <0 ||
+			start.x===this.width || start.y===this.height || 
+			goal.x <0 || goal.y <0 ||
+			goal.x===this.width || goal.y===this.height){
+			return null
+		}		
 		//h value is the heuristic value distance Manhattan
-		const h = (poi1, poi2=goal) => {
-			return Math.abs(poi1.x-poi2.x) + Math.abs(poi1.y-poi2.y)
+		const h = (poi1) => {
+			return Math.abs(poi1.x-goal.x) + Math.abs(poi1.y-goal.y)
 		}
 
 		//g value is the cost of the route so far
@@ -294,22 +298,21 @@ module.exports = class Board{
 		}
 
 		// clean anything that the caller sent into mere x and y.
-		const goal = {x:goalPoi.x, y:goalPoi.y} //can initialize distance to self
-		const start = {x:startPoi.x, y:startPoi.y}
 		let closedSet = [] //points that are already evaluated
 		let openSet = [start] //unevaluated points
 
 		while(openSet.length>0){
-			if(openSet.length>=maxArea){
-				//there can't be more open points than the area that we are checking: Sanity check
-				console.log("Too many points in openSet to make sense")
-				return null
-			}
+			// if(openSet.length>=maxArea){
+			// 	//there can't be more open points than the area that we are checking: Sanity check
+			// 	console.log("Too many points in openSet to make sense")
+			// 	return null
+			// }
 
 			//collect the coordinate and the actual space for analysis
-			let currentPoi = hgf(openSet.pop())
+			let currentPoi = openSet.pop()
+			currentPoi = hgf(currentPoi)
 
-			if(equalPoi(currentPoi, goalPoi)){
+			if(equalPoi(currentPoi, goal)){
 				// if currentPoi is destination we rebuild the path because we found the destination
 				return buildFinalPath(currentPoi)
 			} else {
@@ -317,42 +320,24 @@ module.exports = class Board{
 				let neighbours = this.getOrth(currentPoi)
 					.filter(p=>{
 						//filter neighbours that are in the closed set
-						if (setIncludes(closedSet, p)){
-							return false
-						} else return true
+						return !setIncludes(closedSet, p)
 					}).map(p=>{
 						//add a link to each neighbour that references where they were traversed from
 						p["previous"] = currentPoi
 						return p
-					})
-				neighbours.forEach(p=>{
+					}).forEach(p=>{
 					//put neighbours that are not traversable into the closed set
 					if(!this.getSpace(p).traversable) {
 						closedSet.push(p)
-					} else if(setIncludes(openSet, p)){
-						//if the neighbour is in the open set already figure out which version has the lowest f and replace it.
-						//get the existing value from the open set
-						let i = setIndexOf(openSet, p)
-						let existing = openSet[i]
-						
-						//calculate the new values from the point
-						p= hgf(p)
-
-						//compare the f values of both and if the f value is lower on the new one replace the old one
-						if(p.f<existing.f){
-							//the found value is lower than the old value so we remove the old value and replace it with the new more efficient one
-							openSet[i] = hgf(openSet[i])
-							openSet[i].previous = currentPoi
-						}
 					} else {
 						// calculate FGH and put the neighbour into the open set
-						openSet.push(p)
+						openSet.push(hgf(p))
 					}
 				})
-
 			}
 			// keep openSet sorted by f so the pop is always the lowest number
 			openSet =  openSet.sort((a,b)=>{
+				if(a.f==NaN || b.f==NaN) console.log("Somewhere a NaN slipped into F.")
 				if(a.f===b.f) return 0
 				if(a.f<b.f) return 1
 				if(a.f>b.f) return -1
@@ -360,6 +345,7 @@ module.exports = class Board{
 		}
 		return null
 	}
+
 	print(){
 		this.board.forEach((y)=>{
 				let yrow = '|'

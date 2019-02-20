@@ -1,3 +1,5 @@
+"use strict"
+
 const bodyParser = require('body-parser')
 const express = require('express')
 const logger = require('morgan')
@@ -38,18 +40,21 @@ app.post('/start', (request, response) => {
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
   let board = new Board(request.body)
-  let diagnosedDirections = board.directions
+  let diagDir = board.directions
     .map(direction=>{
       // each incentive gets assigned a list of moves to get there instead of just a coordinate
-      console.log("Destination ", direction.incentives[0])
-      console.log("Route to ", board.routeTo(direction, direcion.incentives[0], direction.area))
       // direction.incentives = direction.incentives
       //   .map(incentive=>{
       //     return board.routeTo(direction, incentive, direction.areaCount)
       //   })
       return direction
     })
-  // console.log(diagnosedDirections)
+    // console.log("_____________________________")
+  // console.log("Destination ", diagDir[0].incentives[0])  
+  // console.log("AreaCount ", diagDir[0].areaCount)
+  // console.log("DiagnosedDirection  ", diagDir[0])
+  // console.log(board.routeTo(diagDir[0], diagDir[0].incentives[0], diagDir.area))
+  // console.log(diagDir)
   // board.print()
   // Response data
   //can't do this because there is occasionally not a direction
