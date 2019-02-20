@@ -42,20 +42,12 @@ app.post('/move', (request, response) => {
   let board = new Board(request.body)
   let diagDir = board.directions
     .map(direction=>{
-      // each incentive gets assigned a list of moves to get there instead of just a coordinate
-      // direction.incentives = direction.incentives
-      //   .map(incentive=>{
-      //     return board.routeTo(direction, incentive, direction.areaCount)
-      //   })
+      // each incentive gets assigned a list of moves to get there instead of just a coordinate so we can determine how long it is
+      direction.incentives = direction.incentives
+        .map(incentive=>{return board.routeTo(direction, incentive)})
       return direction
     })
-    // console.log("_____________________________")
-  // console.log("Destination ", diagDir[0].incentives[0])  
-  // console.log("AreaCount ", diagDir[0].areaCount)
-  // console.log("DiagnosedDirection  ", diagDir[0])
-  // console.log(board.routeTo(diagDir[0], diagDir[0].incentives[0], diagDir.area))
-  // console.log(diagDir)
-  // board.print()
+  
   // Response data
   //can't do this because there is occasionally not a direction
   const data = {

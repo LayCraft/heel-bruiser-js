@@ -220,7 +220,7 @@ module.exports = class Board{
 		return {dangers:dangers, incentives:incentives, area:area}
 	}
 
-	routeTo(startPoi, goalPoi, maxArea=this.width*this.height){
+	routeTo(startPoi, goalPoi){
 		//clean the points
 		const start = {x:startPoi.x , y:startPoi.y}
 		const goal = {x:goalPoi.x, y:goalPoi.y}
