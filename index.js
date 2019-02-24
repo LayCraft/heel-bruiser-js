@@ -90,21 +90,14 @@ app.post('/move', (request, response) => {
 
   // sort the rankings
   //find the 
-
-  let finalDirection = ''
-  let highestGood = 0
-  for( let key of Object.keys(overallGoodness)){
-    if (overallGoodness[key]>=highestGood) finalDirection = key
-  }
   
   // Response data
-  //can't do this because there is occasionally not a direction
   const data = {
-    move: directions[0].direction, // one of: ['up','down','left','right']
+    //go the direction of the key in overallGoodness with the greatest accumulated value. Tie picks the last evaluated.
+    move: Object.keys(overallGoodness).reduce((a, b) => overallGoodness[a] > overallGoodness[b] ? a : b), // one of: ['up','down','left','right']
   }
   console.log("Going " + data.move)
-  // if(!board.directions[0].direction) console.log(board.directions)
-
+  
   return response.json(data)
 })
 
