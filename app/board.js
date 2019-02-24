@@ -44,7 +44,9 @@ module.exports = class Board{
 			p["areaCount"] = diagnosis.area
 			p["dangers"] = diagnosis.dangers
 			p["incentives"] = diagnosis.incentives
+			p["tails"] = diagnosis.tails
 			p["direction"] = this.directionFromHead(p)
+			
 			//copy the useful properties in and return directions
 			let actualSpace = this.getSpace(p)
 			if(actualSpace.danger) p["danger"] = actualSpace.danger
@@ -175,6 +177,7 @@ module.exports = class Board{
 		let area = 0
 		let dangers = []
 		let incentives = []
+		let tails = 0
 
 		const listHasPoi = function(list, poi){
 			//look through the checked list for an equal x and y value
@@ -193,6 +196,7 @@ module.exports = class Board{
 			if(realPoint.traversable) {
 				//count space
 				area++
+				
 				//count danger and incentives
 				if(realPoint.danger) {
 					//save all dangers
@@ -202,6 +206,9 @@ module.exports = class Board{
 					//save all incentive spaces
 					incentives.push(point)
 				}
+				//remember that we found a tail (it may become a open space later)
+				if(realPoint.tail) tails++
+
 
 				//add all connected points that aren't in lists
 				this.getOrth(point).filter(p=>{
@@ -217,7 +224,7 @@ module.exports = class Board{
 			checked.push(point)
 		}
 		// Return object with counts of stuff
-		return {dangers:dangers, incentives:incentives, area:area}
+		return {dangers:dangers, incentives:incentives, area:area, tails:tails}
 	}
 
 	routeTo(startPoi, goalPoi){

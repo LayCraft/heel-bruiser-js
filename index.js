@@ -75,9 +75,30 @@ app.post('/move', (request, response) => {
   for (let i of maxWays){
     overallGoodness[i] = overallGoodness[i] + 1
   }
-  console.log(overallGoodness)
+  console.log(directions)
+
   //points for head space in area
-  
+  // let maxArea = 0
+  // let maxWays = []
+  // for (let d of directions){
+  //   if (!maxWays[0]){
+  //     //if no element in array initiate the array
+  //     maxWays.push(d.direction)
+  //     maxArea = d.areaCount
+  //   } else if(d.areaCount>maxArea){
+  //     //the area count is greater than the values we have so we set the greatest way list and update 
+  //     maxWays = [d.direction]
+  //     maxArea = d.areaCount
+  //   } else if(d.areaCount===maxArea){
+  //     //we have a match. Push the element.
+  //     maxWays.push(d.direction)
+  //   }
+  //   //who cares about anything that is less than?
+  // }
+  // for (let i of maxWays){
+  //   overallGoodness[i] = overallGoodness[i] + 1
+  // }
+
   //points for least number of danger spaces
   
   //points for shortest path to my tail
