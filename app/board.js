@@ -279,12 +279,13 @@ module.exports = class Board{
 			})
 			return includes
 		}
-		const setIndexOf = (set, poi) => {
-			//return the index of the poi in the set
-			set.forEach((p,i)=>{
-				if(equalPoi(poi, p)) return i
-			})
-		}
+		// const setIndexOf = (set, poi) => {
+		// 	//return the index of the poi in the set
+		// 	set.forEach((p,i)=>{
+		// 		if(equalPoi(poi, p)) return i
+		// 	})
+		// }
+		
 		//traverse the array of poi starting at the end and going back to start
 		const buildFinalPath = (poi, accumulator=[]) => {
 			//function takes poi and looks traverses all previous
@@ -310,11 +311,6 @@ module.exports = class Board{
 
 		while(openSet.length>0){
 			// console.log(openSet.length)
-			if(openSet.length>=Math.pow(this.width,this.height)){
-				//there can't be more open points than the area that we are checking: Sanity check
-				console.log("Too many points in openSet to make sense")
-				return null
-			}
 
 			//collect the coordinate and the actual space for analysis
 			let currentPoi = openSet.pop()
