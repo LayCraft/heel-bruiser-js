@@ -35,7 +35,7 @@ module.exports = class Board{
 		blob.board.snakes.forEach((snake)=> this._buildSnake(snake))
 
 		//examine all areas surrounding the head
-		//NOTE: will cause error 500 when there are no orthoganal moves
+		//NOTE: will cause error 500 when there are no orthoganal moves (You are dead regardless of what you do.)
 		this.directions = this.getOrth(this.myHead).map(p=>{
 			//attach an area to the directions
 			
@@ -285,7 +285,7 @@ module.exports = class Board{
 		// 		if(equalPoi(poi, p)) return i
 		// 	})
 		// }
-		
+
 		//traverse the array of poi starting at the end and going back to start
 		const buildFinalPath = (poi, accumulator=[]) => {
 			//function takes poi and looks traverses all previous
