@@ -5,6 +5,7 @@ const express = require('express')
 const logger = require('morgan')
 
 const Board = require('./app/board') //The board related module
+const RouteCache = require('./app/route_cache') //this is a route cache object for previously generated results
 
 const app = express()
 const {
@@ -39,12 +40,25 @@ app.post('/start', (request, response) => {
 // Handle POST request to '/move'
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
-  let board = new Board(request.body)
+  const board = new Board(request.body)
+  const cache = new RouteCache()
+  // //lets save a cache of previous results of route finding so we can scoop them later
+  // let incentiveCache = []
+  // // the cache should be 
+  // const inCache = (poi) => {
+  // 	//return the index of the poi in the set
+
+  // }
+
   const directions = board.directions
     .map(direction=>{
       // each incentive gets assigned a list of moves to get there instead of just a coordinate so we can determine how long it is
       direction.incentives = direction.incentives
-        .map(incentive=>{return board.routeTo(direction, incentive)})
+        .map(incentive=>{
+          //todo: this needs to be limited to a heuristic so that only near spaces get evaluated
+          console.log("incentive", incentive)
+          return board.routeTo(direction, incentive)
+        })
     return direction
   })
   
