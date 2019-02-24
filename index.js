@@ -40,18 +40,67 @@ app.post('/start', (request, response) => {
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
   let board = new Board(request.body)
-  let diagDir = board.directions
+  const directions = board.directions
     .map(direction=>{
       // each incentive gets assigned a list of moves to get there instead of just a coordinate so we can determine how long it is
       direction.incentives = direction.incentives
         .map(incentive=>{return board.routeTo(direction, incentive)})
-      return direction
-    })
+    return direction
+  })
+  
+  // determine rankings on directions.
+  // console.log(directions)
+  
+
+  let overallGoodness = {'up':0,'down':0,'left':0,'right':0}
+
+  //points for greatest area
+  let maxArea = 0
+  let maxWays = []
+  for (let d of directions){
+    if (!maxWays[0]){
+      //if no element in array initiate the array
+      maxWays.push(d.direction)
+      maxArea = d.areaCount
+    } else if(d.areaCount>maxArea){
+      //the area count is greater than the values we have so we set the greatest way list and update 
+      maxWays = [d.direction]
+      maxArea = d.areaCount
+    } else if(d.areaCount===maxArea){
+      //we have a match. Push the element.
+      maxWays.push(d.direction)
+    }
+    //who cares about anything that is less than?
+  }
+  for (let i of maxWays){
+    overallGoodness[i] = overallGoodness[i] + 1
+  }
+  console.log(overallGoodness)
+  //points for head space in area
+  
+  //points for least number of danger spaces
+  
+  //points for shortest path to my tail
+  
+  //points for most incentives
+  
+  //points for nearest incentive
+  
+  //points for having incentive in first move
+
+  // sort the rankings
+  //find the 
+
+  let finalDirection = ''
+  let highestGood = 0
+  for( let key of Object.keys(overallGoodness)){
+    if (overallGoodness[key]>=highestGood) finalDirection = key
+  }
   
   // Response data
   //can't do this because there is occasionally not a direction
   const data = {
-    move: board.directions[0].direction || 'up', // one of: ['up','down','left','right']
+    move: directions[0].direction, // one of: ['up','down','left','right']
   }
   console.log("Going " + data.move)
   // if(!board.directions[0].direction) console.log(board.directions)

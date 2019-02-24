@@ -302,11 +302,12 @@ module.exports = class Board{
 		let openSet = [start] //unevaluated points
 
 		while(openSet.length>0){
-			// if(openSet.length>=maxArea){
-			// 	//there can't be more open points than the area that we are checking: Sanity check
-			// 	console.log("Too many points in openSet to make sense")
-			// 	return null
-			// }
+			// console.log(openSet.length)
+			if(openSet.length>=Math.pow(this.width,this.height)){
+				//there can't be more open points than the area that we are checking: Sanity check
+				console.log("Too many points in openSet to make sense")
+				return null
+			}
 
 			//collect the coordinate and the actual space for analysis
 			let currentPoi = openSet.pop()
