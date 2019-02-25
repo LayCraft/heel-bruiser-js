@@ -5,10 +5,10 @@ module.exports = class LocationCache {
         this.clearCache()
     }
 
-    setCache(x, y, route){
+    setCache(x, y, location){
         //put the array into the cache at the specified x and y
         let cacheName = str(x)+":"+str(y)
-        this.pool[cacheName] = route
+        this.pool[cacheName] = location
     }
     getCache(x, y){
         //get the array from the cache if it exists at x and y
