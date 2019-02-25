@@ -39,7 +39,7 @@ app.post('/start', (request, response) => {
 // Handle POST request to '/move'
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
-  const board = new Board(request.body)
+  let board = new Board(request.body)
   const directions = board.directions
     .map(direction=>{
       // each incentive gets assigned a list of moves to get there instead of just a coordinate so we can determine how long it is
@@ -93,6 +93,28 @@ app.post('/move', (request, response) => {
       maxWays = [d.direction]
       maxVal = d.tails
     } else if(d.tails===maxVal){
+      //we have a match. Push the element.
+      maxWays.push(d.direction)
+    }
+    //who cares about anything that is less than other directions?
+  }
+  for (let i of maxWays){
+    overallGoodness[i] = overallGoodness[i] + 1
+  }
+
+  //points for most incentives in direction
+  maxVal = 0
+  maxWays = []
+  for (let d of directions){
+    if (!maxWays[0]){
+      //if no element in array initiate the array
+      maxWays.push(d.direction)
+      maxVal = d.incentives.length
+    } else if(d.tails>maxVal){
+      //the tail count is greater than the values we have so we set the greatest way list and update 
+      maxWays = [d.direction]
+      maxVal = d.incentives.length
+    } else if(d.incentives.length===maxVal){
       //we have a match. Push the element.
       maxWays.push(d.direction)
     }
@@ -223,7 +245,7 @@ app.post('/move', (request, response) => {
     move: Object.keys(overallGoodness).reduce((a, b) => overallGoodness[a] > overallGoodness[b] ? a : b), // one of: ['up','down','left','right']
   }
   console.log("Going " + data.move)
-  
+  delete board
   return response.json(data)
 })
 
