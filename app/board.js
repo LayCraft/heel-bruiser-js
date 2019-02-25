@@ -1,3 +1,5 @@
+const LocationCache = require('./location_cache')
+
 module.exports = class Board{
 	/**
 	 * Snakes are structured as objects. Each space of a snake has a link to the head.
@@ -7,6 +9,7 @@ module.exports = class Board{
 	 */
 	constructor(blob){
 		//the constructor is a function that builds a basic board from the data
+		this.cache = new LocationCache() //this is a data structure for quickly storing and grabbing spaces
 		//Meta about board
 		this.myId = blob.you.id
 		this.myHead = blob.you.body[0]

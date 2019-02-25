@@ -1,4 +1,4 @@
-module.exports = class RouteCache {
+module.exports = class LocationCache {
     //this file is an in memory cache for saving previously checked routes.
     constructor(){
         this.pool = {}
