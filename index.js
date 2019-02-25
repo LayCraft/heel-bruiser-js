@@ -41,13 +41,12 @@ app.post('/start', (request, response) => {
 app.post('/move', (request, response) => {
   // NOTE: Do something here to generate your move
   const board = new Board(request.body)
-  const cache = new RouteCache()
+  let cache = new RouteCache() //for saving routing results
   // //lets save a cache of previous results of route finding so we can scoop them later
   // let incentiveCache = []
   // // the cache should be 
   // const inCache = (poi) => {
   // 	//return the index of the poi in the set
-
   // }
 
   const directions = board.directions
@@ -90,71 +89,71 @@ app.post('/move', (request, response) => {
     overallGoodness[i] = overallGoodness[i] + 1
   }
 
-  //points for most tails in direction
-  maxVal = 0
-  maxWays = []
-  for (let d of directions){
-    if (!maxWays[0]){
-      //if no element in array initiate the array
-      maxWays.push(d.direction)
-      maxVal = d.tails
-    } else if(d.tails>maxVal){
-      //the tail count is greater than the values we have so we set the greatest way list and update 
-      maxWays = [d.direction]
-      maxVal = d.tails
-    } else if(d.tails===maxVal){
-      //we have a match. Push the element.
-      maxWays.push(d.direction)
-    }
-    //who cares about anything that is less than other directions?
-  }
-  for (let i of maxWays){
-    overallGoodness[i] = overallGoodness[i] + 1
-  }
+  // //points for most tails in direction
+  // maxVal = 0
+  // maxWays = []
+  // for (let d of directions){
+  //   if (!maxWays[0]){
+  //     //if no element in array initiate the array
+  //     maxWays.push(d.direction)
+  //     maxVal = d.tails
+  //   } else if(d.tails>maxVal){
+  //     //the tail count is greater than the values we have so we set the greatest way list and update 
+  //     maxWays = [d.direction]
+  //     maxVal = d.tails
+  //   } else if(d.tails===maxVal){
+  //     //we have a match. Push the element.
+  //     maxWays.push(d.direction)
+  //   }
+  //   //who cares about anything that is less than other directions?
+  // }
+  // for (let i of maxWays){
+  //   overallGoodness[i] = overallGoodness[i] + 1
+  // }
 
-  //points for least number of danger spaces
-  let minVal = 9999999999
-  let minWays = []
-  for (let d of directions){
-    if (!minWays[0]){
-      //if no element in array initiate the array
-      minWays.push(d.direction)
-      minVal = d.dangers.length
-    } else if(d.dangers.length<minVal){
-      //the tail count is greater than the values we have so we set the greatest way list and update 
-      minWays = [d.direction]
-      minVal = d.dangers.length
-    } else if(d.dangers.length===minVal){
-      //we have a match. Push the element.
-      minWays.push(d.direction)
-    }
-    //who cares about anything that is more than other directions?
-  }
-  for (let i of maxWays){
-    overallGoodness[i] = overallGoodness[i] + 1
-  }
+  // //points for least number of danger spaces
+  // let minVal = 9999999999
+  // let minWays = []
+  // for (let d of directions){
+  //   if (!minWays[0]){
+  //     //if no element in array initiate the array
+  //     minWays.push(d.direction)
+  //     minVal = d.dangers.length
+  //   } else if(d.dangers.length<minVal){
+  //     //the tail count is greater than the values we have so we set the greatest way list and update 
+  //     minWays = [d.direction]
+  //     minVal = d.dangers.length
+  //   } else if(d.dangers.length===minVal){
+  //     //we have a match. Push the element.
+  //     minWays.push(d.direction)
+  //   }
+  //   //who cares about anything that is more than other directions?
+  // }
+  // for (let i of maxWays){
+  //   overallGoodness[i] = overallGoodness[i] + 1
+  // }
 
-  //points for most incentives
-  maxVal = 0
-  maxWays = []
-  for (let d of directions){
-    if (!maxWays[0]){
-      //if no element in array initiate the array
-      maxWays.push(d.direction)
-      maxVal = d.incentives.length
-    } else if(d.incentives.length>maxVal){
-      //the tail count is greater than the values we have so we set the greatest way list and update 
-      maxWays = [d.direction]
-      maxVal = d.incentives.length
-    } else if(d.incentives.length===maxVal){
-      //we have a match. Push the element.
-      maxWays.push(d.direction)
-    }
-    //who cares about anything that is less than other directions?
-  }
-  for (let i of maxWays){
-    overallGoodness[i] = overallGoodness[i] + 1
-  }
+  // //points for most incentives
+  // maxVal = 0
+  // maxWays = []
+  // for (let d of directions){
+  //   if (!maxWays[0]){
+  //     //if no element in array initiate the array
+  //     maxWays.push(d.direction)
+  //     maxVal = d.incentives.length
+  //   } else if(d.incentives.length>maxVal){
+  //     //the tail count is greater than the values we have so we set the greatest way list and update 
+  //     maxWays = [d.direction]
+  //     maxVal = d.incentives.length
+  //   } else if(d.incentives.length===maxVal){
+  //     //we have a match. Push the element.
+  //     maxWays.push(d.direction)
+  //   }
+  //   //who cares about anything that is less than other directions?
+  // }
+  // for (let i of maxWays){
+  //   overallGoodness[i] = overallGoodness[i] + 1
+  // }
 
   //points for nearest incentive
   // maxVal = 0
@@ -178,8 +177,6 @@ app.post('/move', (request, response) => {
   // for (let i of maxWays){
   //   overallGoodness[i] = overallGoodness[i] + 1
   // }
-
-  console.log(overallGoodness)
   
   //points for having incentive in first move
   // maxVal = 0
