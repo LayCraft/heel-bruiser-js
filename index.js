@@ -46,7 +46,10 @@ app.post('/move', (request, response) => {
   let allocation = 0
 
   //as health decreases increase value of food
+  allocation = (100-board.myHealth)/5
   
+  console.log(allocation)
+
   //Rank for area
   allocation = 4
   board.directions.map(direction=>{
@@ -59,6 +62,7 @@ app.post('/move', (request, response) => {
     overallGoodness[direction[1]] = overallGoodness[direction[1]] + allocation
     allocation--
   })
+
   //Rank for incentives
   allocation = 4
   board.directions.map(direction=>{
