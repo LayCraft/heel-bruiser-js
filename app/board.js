@@ -315,7 +315,7 @@ module.exports = class Board{
 
 		while(openSet.length>0){
 			// console.log(openSet.length)
-			if(openSet.length>this.width*this.length)
+			if(openSet.length>this.width*this.length) break
 			//collect the coordinate and the actual space for analysis
 			let currentPoi = openSet.pop()
 			currentPoi = hgf(currentPoi)

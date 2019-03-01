@@ -245,7 +245,6 @@ app.post('/move', (request, response) => {
     move: Object.keys(overallGoodness).reduce((a, b) => overallGoodness[a] > overallGoodness[b] ? a : b), // one of: ['up','down','left','right']
   }
   console.log("Going " + data.move)
-  delete board
   return response.json(data)
 })
 
