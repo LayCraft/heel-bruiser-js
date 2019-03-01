@@ -47,8 +47,16 @@ app.post('/move', (request, response) => {
 
   //Rank for area
   allocation = 4
-  // board.directions.map(direction)
-
+  board.directions.map(direction=>{
+    return [direction.area, direction.direction]
+  }).sort((a,b)=>{
+    if(a[0]>b[0]) return 1
+    if(a[0]<b[0]) return -1
+    if(a[0]===b[0]) return 0
+  }).forEach(direction=>{
+    overallGoodness[direction[1]] = overallGoodness[direction[1]] + allocation
+    allocation--
+  })
   //Rank for incentives
   allocation = 4
   board.directions.map(direction=>{
@@ -60,10 +68,11 @@ app.post('/move', (request, response) => {
     if(a[0]<b[0]) return -1
     if(a[0]===b[0]) return 0
   }).forEach(direction=>{
-    overallGoodness[direction[1]] = allocation
+    overallGoodness[direction[1]] = overallGoodness[direction[1]] + allocation
     allocation--
   })
 
+  console.log(overallGoodness)
 
 
   // Response data
