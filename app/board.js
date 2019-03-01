@@ -277,18 +277,11 @@ module.exports = class Board{
 		}			
 		//does the set include an equivalent x and y value?
 		const setIncludes = (set, poi) => {
-			let includes = false;
-			set.forEach(p=>{
-				if(equalPoi(poi, p)) includes = true
-			})
-			return includes
+			for(let i=0; i<set.length; i++){
+				if(equalPoi(poi, set[i])) return true
+			}
+			return false
 		}
-		// const setIndexOf = (set, poi) => {
-		// 	//return the index of the poi in the set
-		// 	set.forEach((p,i)=>{
-		// 		if(equalPoi(poi, p)) return i
-		// 	})
-		// }
 
 		//traverse the array of poi starting at the end and going back to start
 		const buildFinalPath = (poi, accumulator=[]) => {
@@ -308,48 +301,42 @@ module.exports = class Board{
 			poi["f"] = f(poi)
 			return poi
 		}
+		const downsamplePoi = (poi) => String(poi.x)+":"+String(poi.y)
 
 		// clean anything that the caller sent into mere x and y.
 		let closedSet = [] //points that are already evaluated
 		let openSet = [start] //unevaluated points
 
 		while(openSet.length>0){
-			// console.log(openSet.length)
-			if(openSet.length>this.width*this.length) break
 			//collect the coordinate and the actual space for analysis
-			let currentPoi = openSet.pop()
-			currentPoi = hgf(currentPoi)
+			let currentPoi = hgf(openSet.pop())
+			// currentPoi = hgf(currentPoi)
 
 			if(equalPoi(currentPoi, goal)){
 				// if currentPoi is destination we rebuild the path because we found the destination
 				return buildFinalPath(currentPoi)
-			} else {
+			} else if(!closedSet.includes(downsamplePoi(currentPoi))){
 				//get neighbours and keep the current as the previous
 				let neighbours = this.getOrth(currentPoi)
 					.filter(p=>{
 						//filter neighbours that are in the closed set
-						return !setIncludes(closedSet, p)
+						return !closedSet.includes(downsamplePoi(currentPoi))
 					}).map(p=>{
 						//add a link to each neighbour that references where they were traversed from
 						p["previous"] = currentPoi
 						return p
 					}).forEach(p=>{
-					//put neighbours that are not traversable into the closed set
-					if(!this.getSpace(p).traversable) {
-						closedSet.push(p)
-					} else {
-						// calculate FGH and put the neighbour into the open set
-						openSet.push(hgf(p))
-					}
-				})
+						//each neighbour should get pushed into the open set
+						openSet.push(p)
+					})
+				// keep openSet sorted by f so the pop is always the lowest number
+				openSet =  openSet.sort((a,b)=>{
+					if(a.f==NaN || b.f==NaN) console.log("Somewhere a NaN slipped into F.")
+					if(a.f===b.f) return 0
+					if(a.f<b.f) return 1
+					if(a.f>b.f) return -1
+				}) 
 			}
-			// keep openSet sorted by f so the pop is always the lowest number
-			openSet =  openSet.sort((a,b)=>{
-				if(a.f==NaN || b.f==NaN) console.log("Somewhere a NaN slipped into F.")
-				if(a.f===b.f) return 0
-				if(a.f<b.f) return 1
-				if(a.f>b.f) return -1
-			}) 
 		}
 		return null
 	}
