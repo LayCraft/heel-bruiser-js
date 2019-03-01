@@ -15,6 +15,7 @@ module.exports = class Board{
 		this.myId = blob.you.id
 		this.myHead = blob.you.body[0]
 		this.myLength = blob.you.body.length
+		this.myHealth = blob.you.health
 		this.width = blob.board.width
 		this.height = blob.board.height
 		this.snakes = blob.board.snakes //hold onto the list of snakes
