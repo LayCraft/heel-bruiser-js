@@ -79,8 +79,9 @@ app.post('/move', (request, response) => {
         //no reducing an array with no elements
         if( !direction[0]){ return false } else return true
       }).map(direction=>{
-        console.log(direction)
-        direction[0] = direction[0].reduce((prev, curr)=> prev+curr)
+        if(direction[0].length>0){
+          direction[0] = direction[0].reduce((prev, curr)=> prev+curr)
+        }
         return direction
       }).sort((a,b)=>{
         if(a[0]>b[0]) return 1
@@ -105,8 +106,12 @@ app.post('/move', (request, response) => {
       dirColl = board.directions.map(direction=>{
         return [direction.dangers
           .map(danger=>{
-          return Math.abs(direction.x-danger.x) + Math.abs(direction.y-danger.y)
-        }).reduce((prev, curr)=> prev+curr), direction.direction]
+          return Math.abs(direction.x-danger.x) + Math.abs(direction.y-danger.y)}), direction.direction]
+      }).map(direction=>{
+        if(direction[0].length>0){
+          direction[0] = direction[0].reduce((prev, curr)=> prev+curr)
+        }
+        return direction
       }).sort((a,b)=>{
         if(a[0]>b[0]) return -1
         if(a[0]<b[0]) return 1
