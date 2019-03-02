@@ -44,7 +44,7 @@ app.post('/move', (request, response) => {
   // determine rankings on directions.
   let overallGoodness = {'up':0,'down':0,'left':0,'right':0}  
   let allocation = 0
-
+  let dirColl = []
   //Rank for area
   allocation = 4
   board.directions.map(direction=>{
@@ -57,9 +57,10 @@ app.post('/move', (request, response) => {
     overallGoodness[direction[1]] = overallGoodness[direction[1]] + allocation
     allocation--
   })
+
   //Rank for incentives
   allocation = 4
-  board.directions.map(direction=>{
+  dirColl = board.directions.map(direction=>{
     return [direction.incentives.map(incentive=>{
       return Math.abs(direction.x-incentive.x) + Math.abs(direction.y-incentive.y)
     }).reduce((prev, curr)=> prev+curr), direction.direction]
@@ -67,14 +68,23 @@ app.post('/move', (request, response) => {
     if(a[0]>b[0]) return 1
     if(a[0]<b[0]) return -1
     if(a[0]===b[0]) return 0
-  }).forEach(direction=>{
-    overallGoodness[direction[1]] = overallGoodness[direction[1]] + allocation
-    allocation--
   })
+  for(let i=0; i<dirColl.length; i++){
+    // console.log(overallGoodness[dirColl[i][1]])
+    overallGoodness[dirColl[i][1]] = overallGoodness[dirColl[i][1]] + allocation
+    //only derement if the next space has a different value
+    if(dirColl[i+1]&&dirColl[i+1][0]!=dirColl[i][0]){
+      allocation--
+    }
+  }
 
+  //rank for danger avoidance
+  console.log(board.directions)
+
+
+
+  // console.log(dirColl)
   console.log(overallGoodness)
-
-
   // Response data
   const data = {
     //go the direction of the key in overallGoodness with the greatest accumulated value. Tie picks the last evaluated.
