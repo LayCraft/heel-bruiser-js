@@ -15,6 +15,8 @@ module.exports = class Board{
 		this.myId = blob.you.id
 		this.myHead = blob.you.body[0]
 		this.myLength = blob.you.body.length
+		this.myHealth = blob.you.health
+		this.food = blob.board.food
 		this.width = blob.board.width
 		this.height = blob.board.height
 		this.snakes = blob.board.snakes //hold onto the list of snakes
@@ -198,6 +200,7 @@ module.exports = class Board{
 			//save space for analysis
 			let point = unchecked.pop()
 			let realPoint = this.getSpace(point)
+			let danger = false
 			if(realPoint.traversable) {
 				//count space
 				area++
@@ -206,6 +209,7 @@ module.exports = class Board{
 				if(realPoint.danger) {
 					//save all dangers
 					dangers.push(point)
+					danger = true
 				}
 				if(realPoint.incentive) {
 					//save all incentive spaces
@@ -214,16 +218,18 @@ module.exports = class Board{
 				//remember that we found a tail (it may become a open space later)
 				if(realPoint.tail) tails++
 
-
-				//add all connected points that aren't in lists
-				this.getOrth(point).filter(p=>{
-					//if point in unchecked return false
-					if(listHasPoi(unchecked, p)) return false
-					//if point in checked return false
-					if(listHasPoi(checked, p)) return false
-					//if all has been checked…
-					return true
-				}).forEach(p=> unchecked.push(p))
+				// do not traverse past a dangerous space. Consider the area non-area unless you can get to it some other way.
+				if(realPoint.danger){
+					//add all connected points that aren't in lists
+					this.getOrth(point).filter(p=>{
+						//if point in unchecked return false
+						if(listHasPoi(unchecked, p)) return false
+						//if point in checked return false
+						if(listHasPoi(checked, p)) return false
+						//if all has been checked…
+						return true
+					}).forEach(p=> unchecked.push(p))			
+				}
 			} 
 			//record that it has been seen for traversability
 			checked.push(point)
