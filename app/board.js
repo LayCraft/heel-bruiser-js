@@ -53,6 +53,7 @@ module.exports = class Board{
 			
 			//copy the useful properties in and return directions
 			let actualSpace = this.getSpace(p)
+			// console.log(actualSpace.danger)
 			if(actualSpace.danger) p["danger"] = actualSpace.danger
 			if(actualSpace.food) p["food"] = actualSpace.food
 			if(actualSpace.head) p["head"] = actualSpace.head
